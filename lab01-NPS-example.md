@@ -8,12 +8,12 @@
 
 2.  Enter the following information into the menu options:
 
-    R version: **R 4.4.0 Geospatial packages** #note change from R 4.0.3\
-    Cluster: notchpeak\
-    Account and partition: usu-biol4750:notchpeak-shared-freecycle\
-    Number of cores (per node): 4\
-    Number of hours: 72\
-    Memory per job in GB: 16\
+    R version: **R 4.4.0 Geospatial packages** #changed from R 4.0.3 !    
+    Cluster: notchpeak  
+    Account and partition: usu-biol4750:notchpeak-shared-freecycle   
+    Number of cores (per node): 4   
+    Number of hours: 72  
+    Memory per job in GB: 16  
 
 3.  Wait for a moment, and then click on "Connect to RStudio Server"
 
