@@ -19,19 +19,23 @@
 
 ## Use the RStudio menu to connect to Git and start a Project
 
-1.  File --\> New Project\
-2.  Create Project --\> Version Control\
-3.  Create Project from Version Control --\> Git\
-    Repository URL: <https://github.com/saarman/usu-biol4750>\
-    Project directory name: usu-biol4750\
-    Create project as a subdirectory of: \~/\
-    Click on "Create Project"\
-4.  In "Files" panel, select "lab01-NPS-example.md"\
-5.  File --\> Save As...\
-6.  Change the name to include your name or initials, and click "Save".\
-7.  Occasionally, throughout the semester, you will want to "Pull" the master version of the class materials from the Git panel:\
-    Click blue arrow for "Pull"
-8.  Optional steps include using Git to push your changes. This is optional becuase you will be turning in your work through Canvas, although... it would be neat and tidy to have everyone's saved on Git! Click on the Commit Select the files you want to upload to Git Add a "commit" message Click green arrow for "Push"
+1.  File --\> New Project  
+2.  Create Project --\> Version Control 
+3.  Create Project from Version Control --\> Git 
+    Repository URL: https://github.com/saarman/usu-biol4750
+    Project directory name: usu-biol4750  
+    Create project as a subdirectory of: \~/  
+    Click on "Create Project"  
+4.  In "Files" panel, select "lab01-NPS-example.md"  
+5.  File --\> Save As...  
+6.  Change the name to include your name or initials, and click "Save"  
+7.  Occasionally, throughout the semester, you will want to "Pull" the master version of the class materials from the Git panel:  
+    Click blue arrow for "Pull"  
+8.  Optional steps include using Git to push your changes. This is optional becuase you will be turning in your work through Canvas, although... it would be neat and tidy to have everyone's saved on Git!       Click on the Commit  
+   Select the files you want to upload to Git  
+   Add a "commit" message  
+   Click green arrow for "Push" 
+   NOTE: You will probably need to figure out Git account and login for this!
 
 # Goal 2: Install Course R package
 
