@@ -26,7 +26,7 @@ https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_serve
 4. In "Files" pannel, select "lab01-NPS-example.md"  
 5. File --> Save As...  
 6. Change the name to include your name or initials, and click "Save".  
-7. Occassionally, throughout the semester, you will want to "Pull" my version of the class materials from the Git pannel:    
+7. Occassionally, throughout the semester, you will want to "Pull" the master version of the class materials from the Git pannel:    
      Click blue arrow for "Pull"
 9. Optional steps include using Git to push your changes. This is optional becuase you will be turning in your work through Canvas, although... it would be neat and tidy to have everyone's saved on Git!
      Click on the Commit
@@ -37,5 +37,26 @@ https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_serve
 # Goal 2: Install Course R package   
 https://bookdown.org/hhwagner1/LandGenCourse_book/how-to-use-this-book.html#course-r-package-landgencourse
 
+```
+if (!require("remotes")) install.packages("remotes")
+remotes::install_github("hhwagner1/LandGenCourse")
+library(LandGenCourse)
+```
+
+Enter 1.  
+
+## Any errors?
+
 # Goal 3: Review R Skills
 https://bookdown.org/hhwagner1/LandGenCourse_book/basic-r.html#basic-r 
+
+```
+if(!requireNamespace("popgraph", quietly = TRUE))
+{
+  install.packages(c("RgoogleMaps", "geosphere", "proto", "sampling", 
+                      "seqinr", "spacetime", "spdep"), dependencies=TRUE)
+  remotes::install_github("dyerlab/popgraph")
+}
+  
+if(!requireNamespace("gstudio", quietly = TRUE)) remotes::install_github("dyerlab/gstudio")
+```
