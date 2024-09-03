@@ -1,23 +1,40 @@
 # Goal 1: Start an R Project on RStudio Server on CHPC
 https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_server_app/session_contexts/new
+ 
+## Connect to RStudio Session
+1. Go to the onDemand RStudio Server url above.
 
-1. Go to the onDemand RStudio ServerLinks to an external site. url by clicking on the link.Links to an external site.
+2. Enter the following information into the menu options: 
 
-2. Enter the following information into the menu options:
+   R version: R 4.0.3 Geospatial packages   
+   Cluster: notchpeak 
+   Account and partition: usu-biol4750:notchpeak-shared-freecycle  
+   Number of cores (per node): 4    
+   Number of hours: 72    
+   Memory per job in GB: 16  
 
-   R version: R 4.0.3 Geospatial packages  
-   Cluster: notchpeak
-   Account and partition: usu-biol4750:notchpeak-shared-freecycle
-   Number of cores (per node): 4  
-   Number of hours: 72  
-   Memory per job in GB: 16
+3. Wait for a moment, and then click on "Connect to RStudio Server" 
+ 
+## Use the RStudio menu to connect to Git and start a Project
+1. File --> New Project  
+2. Creat Project --> Version Control  
+3. Create Project from Version Control --> Git  
+     Repository URL: https://github.com/saarman/usu-biol4750  
+     Project directory name: usu-biol4750  
+     Create project as a subdirectory of: ~/  
+     Click on "Create Project"  
+4. In "Files" pannel, select "lab01-NPS-example.md"  
+5. File --> Save As...  
+6. Change the name to include your name or initials, and click "Save".  
+7. Occassionally, throughout the semester, you will want to "Pull" my version of the class materials from the Git pannel:    
+     Click blue arrow for "Pull"
+9. Optional steps include using Git to push your changes. This is optional becuase you will be turning in your work through Canvas, although... it would be neat and tidy to have everyone's saved on Git!
+     Click on the Commit
+     Select the files you want to upload to Git
+     Add a "commit" message
+     Click green arrow for "Push"
 
-3. Wait for a moment, and then click on "Connect to RStudio Server"
-
-## Use the RStudio menu to connect to Git
-1. File --> New Project
-
-# Goal 2: Install Course R package  
+# Goal 2: Install Course R package   
 https://bookdown.org/hhwagner1/LandGenCourse_book/how-to-use-this-book.html#course-r-package-landgencourse
 
 # Goal 3: Review R Skills
