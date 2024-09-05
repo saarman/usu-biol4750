@@ -26,6 +26,8 @@ A place for students to go to look at records from live coding examples and note
    
 - To reconnect to an existing session, you can go to <https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sessions>
 
-- Lab Manual: <https://bookdown.org/hhwagner1/LandGenCourse_book/> 
+- Lab Manual: <https://bookdown.org/hhwagner1/LandGenCourse_book/>
 
+- Poll everywhere: <PollEv.com/norahsaarman260>
 
+- Textbook: <https://libcat.lib.usu.edu/record=b3469639~S11>
