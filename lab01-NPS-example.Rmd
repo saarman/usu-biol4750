@@ -2,7 +2,7 @@
 title: "Lab 1"
 author: "Norah Saarman"
 date: "2024-09-05"
-output: html_document
+output: md_document
 ---
 # Goal 1: Start an R Project on RStudio Server on CHPC
 
@@ -101,4 +101,21 @@ class(variable)
 
 vignette()
 
+x <- .3/3
+
+x
+
+# Practice using the function print()
+print(x, digits = 20)
+# [1] 0.099999999999999991673
+
+# Pactice using the function round()
+round(x, digits = 20)
+# [1] 0.1
+
+vec <- rnorm(10000,mean = 0, sd = 1)
+
+hist(vec)
+?round
+?rnorm
 ```
