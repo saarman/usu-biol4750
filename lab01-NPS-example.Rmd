@@ -1,3 +1,9 @@
+---
+title: "Lab 1"
+author: "Norah Saarman"
+date: "2024-09-05"
+output: html_document
+---
 # Goal 1: Start an R Project on RStudio Server on CHPC
 
 <https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_server_app/session_contexts/new>
