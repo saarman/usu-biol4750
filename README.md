@@ -6,8 +6,8 @@ A place for students to go to look at records from live coding examples and note
  - "Save As..." to create a copy of this file with your name/initials, and then fill in the gaps to keep track of your coding, thoughts, and learning.
    
 ## Lab 1: Review of R Skills 9/3/2024
- - lab01-NPS-example.md
-
+ - lab01-NPS-example.Rmd # this is what I edit, then I knit as md_document
+ - lab01-NPS-example.md  # this is easier to read
 
 
 
