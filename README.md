@@ -28,6 +28,6 @@ A place for students to go to look at records from live coding examples and note
 
 - Lab Manual: <https://bookdown.org/hhwagner1/LandGenCourse_book/>
 
-- Poll everywhere: <PollEv.com/norahsaarman260>
+- Poll everywhere: <https://PollEv.com/norahsaarman260>
 
 - Textbook: <https://libcat.lib.usu.edu/record=b3469639~S11>
