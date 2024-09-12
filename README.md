@@ -13,7 +13,7 @@ A place for students to go to look at records from live coding examples and note
  - At the end, export your work as .Rmd/.txt/.md/etc from RStudio, and submit to Canvas for credit and feedback. Ask for help if you need it!
 
 ## Lab 2: Importing Genetic Data 9/10/2023
- - lab02-NPS-example.Rmd (lab02-NPS-example.md is the knitted version)
+ - lab02-NPS-example.Rmd (lab02-NPS-example.md and lab02-NPS-example.pdf are the knitted versions)
  - Create an Rmd log entry that provides the code from:
  - **a. Section 4.3 Worked Example** (you can mostly copy and paste and add comments)
  - **b. Section 4.4 R exercise Week 1** (you will need to write your own code using knowledge from Section 4.3)
