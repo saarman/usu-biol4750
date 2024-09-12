@@ -47,10 +47,17 @@ data("ralu.loci")
 ```
 
 As a .csv file:
+
+To download the csv file...
 ```{r}
 if(!dir.exists(paste0(here(),"/downloads"))) dir.create(paste0(here(),"/downloads"))
 file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
           paste0(here(), "/downloads/ralu.loci.csv"), overwrite=FALSE)
 ```
+Import from csv file:
 
+```{r}
+Frogs <- read.csv(file="./downloads/ralu.loci.csv",header=TRUE)
+as_tibble(Frogs)
+```
 ## Section 4.4 R exercise Week 1
