@@ -25,7 +25,7 @@ if(!requireNamespace("popgraph", quietly = TRUE))
 }
 if(!requireNamespace("gstudio", quietly = TRUE)) remotes::install_github("dyerlab/gstudio")
 
-install.package(here)
+install.packages("here")
 
 Load libraries
 
@@ -38,6 +38,19 @@ library(here)
 library(vcfR)
 library(pinfsc50)
 library(utils)
+```
+## Import data
+
+straight from the package after library is loaded
+```{r}
+data("ralu.loci")
+```
+
+As a .csv file:
+```{r}
+if(!dir.exists(paste0(here(),"/downloads"))) dir.create(paste0(here(),"/downloads"))
+file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
+          paste0(here(), "/downloads/ralu.loci.csv"), overwrite=FALSE)
 ```
 
 ## Section 4.4 R exercise Week 1
