@@ -1,8 +1,6 @@
-## Section 4.3 Worked Example
+# Section 4.3 Worked Example
 
 <https://bookdown.org/hhwagner1/LandGenCourse_book/WE_1.html>
-
-The data set we will use is ralu.loci
 
 Make sure we have the packages:
 
@@ -65,9 +63,11 @@ Load libraries
     library(pinfsc50)
     library(utils)
 
-## Import data
+## 1. Overview
 
-straight from the package after library is loaded
+The data set we will use is ralu.loci
+
+Import straight from the package after library is loaded
 
     data("ralu.loci")
 
@@ -81,7 +81,7 @@ To download the csv file…
 
     ## [1] FALSE
 
-Import from csv file:
+## 2. Import from csv file:
 
     Frogs <- read.csv(file="./downloads/ralu.loci.csv",header=TRUE)
     as_tibble(Frogs)
@@ -137,14 +137,14 @@ Adding a column that gives us Frogs$FrogID
 
     ## [1] "/uufs/chpc.utah.edu/common/home/u6036559/git/usu-biol4750/output/gobblygook"
 
-## save output file
+## Save output file
 
     if(!dir.exists(paste0(here(),"/output"))) dir.create(paste0(here(),"/output"))
 
     write.csv(ralu.loci, paste0(here(),"/output/ralu.loci.csv"), 
               quote=FALSE, row.names=FALSE)
 
-## Create a ‘genind’ object using adegenet
+## 3. Create a ‘genind’ object using adegenet
 
     Frogs[,c(4:11)]
 
@@ -366,7 +366,9 @@ Adding a column that gives us Frogs$FrogID
     ## // Observed heterozygosity: 0.1 0.4 0.09 0.36 0.68 0.02 0.38 0.68
     ## // Expected heterozygosity: 0.17 0.47 0.14 0.59 0.78 0.02 0.48 0.74
 
-## Pull out subsets of info:
+## 4. View info stored in ‘genind’ object
+
+Pull out subsets of info:
 
     as_tibble(Frogs.genind@tab)
 
@@ -390,6 +392,8 @@ Adding a column that gives us Frogs$FrogID
     ## #   G.5 <int>, H.4 <int>, H.5 <int>, H.3 <int>, H.2 <int>, H.1 <int>,
     ## #   H.6 <int>, H.8 <int>, H.7 <int>
 
-# From 5 on uses gstudio, and is optional for now.
+## 5. From here on, uses gstudio, and is optional for now.
 
-## Section 4.4 R exercise Week 1
+# Part 2: Section 4.4 R exercise Week 1
+
+Do this section on your own!

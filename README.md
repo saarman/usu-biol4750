@@ -23,7 +23,6 @@ A place for students to go to look at records from live coding examples and note
 
 
 
-
 # Helpful links:  
   
 - To start a new R session, use this link: <https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_server_app/session_contexts/new>
