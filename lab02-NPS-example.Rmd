@@ -60,4 +60,46 @@ Import from csv file:
 Frogs <- read.csv(file="./downloads/ralu.loci.csv",header=TRUE)
 as_tibble(Frogs)
 ```
+Adding a column that gives us Frogs$FrogID
+```{r}
+Frogs <- data.frame(FrogID = paste(substr(Frogs$Pop, 1, 3), row.names(Frogs), sep="."), Frogs)
+as_tibble(Frogs)
+
+dim(Frogs)
+```
+## Some useful file directory functions
+```{r}
+here()
+#file.choose() but don't leave within code chunk without commenting it out
+
+paste0(here(),"/output","/gobblygook")
+```
+## save output file
+
+```{r}
+if(!dir.exists(paste0(here(),"/output"))) dir.create(paste0(here(),"/output"))
+
+write.csv(ralu.loci, paste0(here(),"/output/ralu.loci.csv"), 
+          quote=FALSE, row.names=FALSE)
+```
+
+## Create a 'genind' object using adegenet
+```{r}
+Frogs[,c(4:11)]
+
+Frogs.genind <- df2genind(X=Frogs[,c(4:11)], sep=":", ncode=NULL, ind.names= Frogs$FrogID, loc.names=NULL, pop=Frogs$Pop, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+```
+## Check the genind object
+
+```{r}
+Frogs.genind
+summary(Frogs.genind)
+```
+## Pull out subsets of info:
+```{r}
+as_tibble(Frogs.genind@tab)
+```
+# From 5 on uses gstudio, and is optional for now.
+
 ## Section 4.4 R exercise Week 1
