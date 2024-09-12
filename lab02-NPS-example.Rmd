@@ -12,5 +12,32 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Section 4.3 Worked Example
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_1.html
 
+The data set we will use is ralu.loci
+
+Make sure we have the packages:
+
+if(!require("adegenet")) install.packages("adegenet")
+if(!requireNamespace("popgraph", quietly = TRUE))
+{
+  install.packages(c("RgoogleMaps", "geosphere", "proto", "sampling", 
+                      "seqinr", "spacetime", "spdep"), dependencies=TRUE)
+  remotes::install_github("dyerlab/popgraph")
+}
+if(!requireNamespace("gstudio", quietly = TRUE)) remotes::install_github("dyerlab/gstudio")
+
+install.package(here)
+
+Load libraries
+
+```{r}
+library(adegenet)
+library(gstudio)
+library(LandGenCourse)
+library(tibble)
+library(here)
+library(vcfR)
+library(pinfsc50)
+library(utils)
+```
 
 ## Section 4.4 R exercise Week 1
