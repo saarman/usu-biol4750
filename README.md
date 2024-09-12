@@ -12,7 +12,7 @@ A place for students to go to look at records from live coding examples and note
  - b. Section 2.2 R Graphics (you can mostly copy and paste and add comments)
  - At the end, knit it to a pdf or md file, export from RStudio, and submit to Canvas for points. If there are error messages during knitting, check the ‘R Markdown’ tab for the code line number and try to fix it. Ask for help if you need it!
 
-## Lab 2: Importing Genetic Data 9/3/2024
+## Lab 2: Importing Genetic Data 9/10/2023
  - lab02-NPS-example.Rmd (lab02-NPS-example.md is the knitted version)
  - Create an Rmd log entry that provides the code from:
  - a. Section 4.3 Worked Example (you can mostly copy and paste and add comments)
