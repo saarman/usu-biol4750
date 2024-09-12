@@ -2,7 +2,7 @@
 title: "Lab 2"
 author: "Norah Saarman"
 date: "2024-09-12"
-output: pdf_document
+output: md_document
 ---
 
 ```{r setup, include=FALSE}
