@@ -17,7 +17,7 @@ A place for students to go to look at records from live coding examples and note
  - lab02-NPS-example.Rmd (lab02-NPS-example.md and lab02-NPS-example.pdf are the knitted versions)  
  - Following along from <https://bookdown.org/hhwagner1/LandGenCourse_book/WE_1.html>
  - Create an Rmd log entry that provides the code from:
- - **a. Section 4.3 Worked Example** (you can mostly copy and paste and add comments, 4.5 and on is OPTIONAL)
+ - **a. Section 4.3 Worked Example** (you can mostly copy and paste and add comments, 4.3.5 and on is OPTIONAL)
  - **b. Section 4.4 R exercise Week 1** (you will need to write your own code using knowledge from Section 4.3)
  - At the end, **knit it to a pdf or md file**, export from RStudio, and submit to Canvas for credit and feedback. If there are error messages during knitting, check the ‘R Markdown’ tab for the code line number and try to fix it. Ask for help if you need it!
 
