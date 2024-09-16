@@ -392,8 +392,158 @@ Pull out subsets of info:
     ## #   G.5 <int>, H.4 <int>, H.5 <int>, H.3 <int>, H.2 <int>, H.1 <int>,
     ## #   H.6 <int>, H.8 <int>, H.7 <int>
 
-## 5. From here on, uses gstudio, and is optional for now.
+## 5. From here on, uses gstudio, and is OPTIONAL for now…
 
 # Part 2: Section 4.4 R exercise Week 1
 
 Do this section on your own!
+
+Download file:
+
+    file.copy(system.file("extdata", "pulsatilla_genotypes.csv", package = "LandGenCourse"),
+              paste0(here(), "/downloads/pulsatilla_genotypes.csv"), overwrite=FALSE)
+
+    ## [1] FALSE
+
+Import from csv as data frame:
+
+    Frogs <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
+    as_tibble(Frogs)
+
+    ## # A tibble: 536 × 19
+    ##       ID OffID Population        X        Y loc1_a loc1_b loc2_a loc2_b loc3_a
+    ##    <int> <int> <chr>         <dbl>    <dbl>  <int>  <int>  <int>  <int>  <int>
+    ##  1    62     0 A21        4426941. 5427173.    340    340    422    422    413
+    ##  2    64     0 A21        4426933. 5427178.    334    334    424    424    417
+    ##  3    65     0 A21        4426936. 5427173.    338    340    417    422    417
+    ##  4    66     0 A21        4426937. 5427174.    340    344    422    422    411
+    ##  5    68     0 A21        4426934. 5427171.    336    342    417    422    423
+    ##  6    69     0 A21        4426933. 5427166.    336    346    422    422    417
+    ##  7    75     0 A21        4426925. 5427175.    340    340    422    422    415
+    ##  8    76     0 A21        4426925. 5427173.    338    340    417    422    413
+    ##  9    77     0 A21        4426922. 5427174.    344    352    422    422    415
+    ## 10    78     0 A21        4426922. 5427174.    342    352    417    424    425
+    ## # ℹ 526 more rows
+    ## # ℹ 9 more variables: loc3_b <int>, loc4_a <int>, loc4_b <int>, loc5_a <int>,
+    ## #   loc5_b <int>, loc6_a <int>, loc6_b <int>, loc7_a <int>, loc7_b <int>
+
+Create ‘genind’ object:
+
+    Frogs.genind <- df2genind(X=Frogs[,c(6:19)], sep="\t", ncode=NULL, ind.names= Frogs$ID, loc.names=NULL, pop=Frogs$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+    ## Warning in df2genind(X = Frogs[, c(6:19)], sep = "\t", ncode = NULL, ind.names
+    ## = Frogs$ID, : duplicate labels detected for some individuals; using generic
+    ## labels
+
+Get info on genind object:
+
+    Frogs.genind
+
+    ## /// GENIND OBJECT /////////
+    ## 
+    ##  // 536 individuals; 14 loci; 184 alleles; size: 459.3 Kb
+    ## 
+    ##  // Basic content
+    ##    @tab:  536 x 184 matrix of allele counts
+    ##    @loc.n.all: number of alleles per locus (range: 5-24)
+    ##    @loc.fac: locus factor for the 184 columns of @tab
+    ##    @all.names: list of allele names for each locus
+    ##    @ploidy: ploidy of each individual  (range: 2-2)
+    ##    @type:  codom
+    ##    @call: df2genind(X = Frogs[, c(6:19)], sep = "\t", ncode = NULL, ind.names = Frogs$ID, 
+    ##     loc.names = NULL, pop = Frogs$Population, NA.char = "NA", 
+    ##     ploidy = 2, type = "codom", strata = NULL, hierarchy = NULL)
+    ## 
+    ##  // Optional content
+    ##    @pop: population of each individual (group size range: 55-128)
+
+Here, there is a problem because the genind object has 14 loci, but
+really this should be only 7 loci.
+
+Going back to the Frogs dataframe and combining loci before creating the
+genind object
+
+    as_tibble(Frogs)
+
+    ## # A tibble: 536 × 19
+    ##       ID OffID Population        X        Y loc1_a loc1_b loc2_a loc2_b loc3_a
+    ##    <int> <int> <chr>         <dbl>    <dbl>  <int>  <int>  <int>  <int>  <int>
+    ##  1    62     0 A21        4426941. 5427173.    340    340    422    422    413
+    ##  2    64     0 A21        4426933. 5427178.    334    334    424    424    417
+    ##  3    65     0 A21        4426936. 5427173.    338    340    417    422    417
+    ##  4    66     0 A21        4426937. 5427174.    340    344    422    422    411
+    ##  5    68     0 A21        4426934. 5427171.    336    342    417    422    423
+    ##  6    69     0 A21        4426933. 5427166.    336    346    422    422    417
+    ##  7    75     0 A21        4426925. 5427175.    340    340    422    422    415
+    ##  8    76     0 A21        4426925. 5427173.    338    340    417    422    413
+    ##  9    77     0 A21        4426922. 5427174.    344    352    422    422    415
+    ## 10    78     0 A21        4426922. 5427174.    342    352    417    424    425
+    ## # ℹ 526 more rows
+    ## # ℹ 9 more variables: loc3_b <int>, loc4_a <int>, loc4_b <int>, loc5_a <int>,
+    ## #   loc5_b <int>, loc6_a <int>, loc6_b <int>, loc7_a <int>, loc7_b <int>
+
+I’ll make a new data frame with the first 5 columns, then paste
+loc1\_a:loc1\_b, etc.
+
+    Frogs <- data.frame(Frogs[,1:5],loc1 = paste(Frogs$loc1_a, Frogs$loc1_b, sep=":"), loc2 = paste(Frogs$loc2_a, Frogs$loc2_b, sep=":"), loc3 = paste(Frogs$loc3_a, Frogs$loc3_b, sep=":"), loc4 = paste(Frogs$loc4_a, Frogs$loc4_b, sep=":"), loc5 = paste(Frogs$loc5_a, Frogs$loc5_b, sep=":"), loc6 = paste(Frogs$loc6_a, Frogs$loc6_b, sep=":"), loc7 = paste(Frogs$loc7_a, Frogs$loc7_b, sep=":"))
+    as_tibble(Frogs)
+
+    ## # A tibble: 536 × 12
+    ##       ID OffID Population        X        Y loc1   loc2  loc3  loc4  loc5  loc6 
+    ##    <int> <int> <chr>         <dbl>    <dbl> <chr>  <chr> <chr> <chr> <chr> <chr>
+    ##  1    62     0 A21        4426941. 5427173. 340:3… 422:… 413:… 446:… 121:… 155:…
+    ##  2    64     0 A21        4426933. 5427178. 334:3… 424:… 417:… 444:… 122:… 155:…
+    ##  3    65     0 A21        4426936. 5427173. 338:3… 417:… 417:… 446:… 135:… 153:…
+    ##  4    66     0 A21        4426937. 5427174. 340:3… 422:… 411:… 446:… 122:… 157:…
+    ##  5    68     0 A21        4426934. 5427171. 336:3… 417:… 423:… 448:… 119:… 155:…
+    ##  6    69     0 A21        4426933. 5427166. 336:3… 422:… 417:… 444:… 122:… 155:…
+    ##  7    75     0 A21        4426925. 5427175. 340:3… 422:… 415:… 442:… 121:… 152:…
+    ##  8    76     0 A21        4426925. 5427173. 338:3… 417:… 413:… 446:… 126:… 155:…
+    ##  9    77     0 A21        4426922. 5427174. 344:3… 422:… 415:… 446:… 121:… 155:…
+    ## 10    78     0 A21        4426922. 5427174. 342:3… 417:… 425:… 446:… 121:… 157:…
+    ## # ℹ 526 more rows
+    ## # ℹ 1 more variable: loc7 <chr>
+
+Create ‘genind’ object:
+
+    Frogs.genind <- df2genind(X=Frogs[,c(6:12)], sep=":", ncode=NULL, ind.names= Frogs$ID, loc.names=names(Frogs[,c(6:12)]), pop=Frogs$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+    ## Warning in df2genind(X = Frogs[, c(6:12)], sep = ":", ncode = NULL, ind.names =
+    ## Frogs$ID, : duplicate labels detected for some individuals; using generic
+    ## labels
+
+Get info on genind object:
+
+    Frogs.genind
+
+    ## /// GENIND OBJECT /////////
+    ## 
+    ##  // 536 individuals; 7 loci; 109 alleles; size: 291.1 Kb
+    ## 
+    ##  // Basic content
+    ##    @tab:  536 x 109 matrix of allele counts
+    ##    @loc.n.all: number of alleles per locus (range: 8-26)
+    ##    @loc.fac: locus factor for the 109 columns of @tab
+    ##    @all.names: list of allele names for each locus
+    ##    @ploidy: ploidy of each individual  (range: 2-2)
+    ##    @type:  codom
+    ##    @call: df2genind(X = Frogs[, c(6:12)], sep = ":", ncode = NULL, ind.names = Frogs$ID, 
+    ##     loc.names = names(Frogs[, c(6:12)]), pop = Frogs$Population, 
+    ##     NA.char = "NA", ploidy = 2, type = "codom", strata = NULL, 
+    ##     hierarchy = NULL)
+    ## 
+    ##  // Optional content
+    ##    @pop: population of each individual (group size range: 55-128)
+
+    summary(Frogs.genind)
+
+    ## 
+    ## // Number of individuals: 536
+    ## // Group sizes: 69 128 78 75 71 55 60
+    ## // Number of alleles per locus: 19 8 26 9 20 14 13
+    ## // Number of alleles per group: 63 68 55 53 55 73 54
+    ## // Percentage of missing data: 1.79 %
+    ## // Observed heterozygosity: 0.6 0.48 0.72 0.57 0.6 0.6 0.61
+    ## // Expected heterozygosity: 0.83 0.59 0.88 0.75 0.77 0.79 0.85
+
+Number of individuals per group/pop is 55-128.
