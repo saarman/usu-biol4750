@@ -1,0 +1,45 @@
+---
+title: "Lab 2"
+author: "Norah Saarman"
+date: "2024-09-17"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Section 4.3 Worked Example
+https://bookdown.org/hhwagner1/LandGenCourse_book/WE_3.html
+
+Load libraries
+```{r}
+#require(adegenet)
+require(LandGenCourse)
+#require(pegas)       
+#require(PopGenReport)
+require(dplyr)
+require(poppr) 
+```
+
+## 1. Overview
+The data set we will use is ralu.loci
+
+
+## 2. Import straight from the package after library is loaded
+```{r}
+data(ralu.loci, package="LandGenCourse")
+Frogs <- data.frame(FrogID = paste(substr(ralu.loci$Pop, 1, 3), 
+                                   row.names(ralu.loci), sep="."), ralu.loci)
+Frogs.genind <- adegenet::df2genind(X=Frogs[,c(4:11)], sep=":", ncode=NULL, 
+                          ind.names= Frogs$FrogID, loc.names=NULL, 
+                          pop=Frogs$Pop, NA.char="NA", ploidy=2, 
+                          type="codom", strata=NULL, hierarchy=NULL)
+Frogs.genind
+```
+
+Get info on genind object, check that they are polymorphic
+```{r}
+Frogs.genind
+summary(Frogs.genind)
+```
