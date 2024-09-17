@@ -1,5 +1,5 @@
 ---
-title: "Lab 2"
+title: "Lab 3"
 author: "Norah Saarman"
 date: "2024-09-17"
 output: md_document
@@ -9,7 +9,7 @@ output: md_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Section 4.3 Worked Example
+# Section 6.3 Worked Example
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_3.html
 
 Load libraries
