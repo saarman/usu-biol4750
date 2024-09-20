@@ -17,7 +17,7 @@ Load libraries
 #require(adegenet)
 require(LandGenCourse)
 #require(pegas)       
-#require(PopGenReport)
+require(PopGenReport)
 require(dplyr)
 require(poppr) 
 ```
@@ -43,3 +43,91 @@ Get info on genind object, check that they are polymorphic
 Frogs.genind
 summary(Frogs.genind)
 ```
+Test for HWE with pegas:
+```{r}
+round(pegas::hw.test(Frogs.genind, B = 1000), digits = 3)
+```
+
+```{r}
+# Chi-squared test: p-value
+HWE.test <- data.frame(sapply(seppop(Frogs.genind), 
+                              function(ls) pegas::hw.test(ls, B=0)[,3]))
+HWE.test.chisq <- t(data.matrix(HWE.test))
+{cat("Chi-squared test (p-values):", "\n")
+round(HWE.test.chisq,3)}
+
+# Monte Carlo: p-value
+HWE.test <- data.frame(sapply(seppop(Frogs.genind), 
+                              function(ls) pegas::hw.test(ls, B=1000)[,4]))
+HWE.test.MC <- t(data.matrix(HWE.test))
+{cat("MC permuation test (p-values):", "\n")
+round(HWE.test.MC,3)}
+
+alpha=0.05 # /96
+Prop.loci.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 2, mean), 
+           MC=apply(HWE.test.MC<alpha, 2, mean))
+Prop.loci.out.of.HWE             # Type this line again to see results table
+
+Prop.pops.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 1, mean), 
+           MC=apply(HWE.test.MC<alpha, 1, mean))
+Prop.pops.out.of.HWE             
+```
+
+
+```{r}
+Chisq.fdr <- matrix(p.adjust(HWE.test.chisq,method="fdr"), 
+                    nrow=nrow(HWE.test.chisq))
+MC.fdr <- matrix(p.adjust(HWE.test.MC, method="fdr"), 
+                    nrow=nrow(HWE.test.MC))
+
+Prop.pops.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 1, mean), 
+           MC=apply(HWE.test.MC<alpha, 1, mean),
+           Chisq.fdr=apply(Chisq.fdr<alpha, 1, mean),
+           MC.fdr=apply(MC.fdr<alpha, 1, mean))
+Prop.pops.out.of.HWE             
+```
+
+# Linkage Disequilibrium
+```{r}
+poppr::ia(Frogs.genind, sample=199)
+
+LD.pair <- poppr::pair.ia(Frogs.genind)
+LD.pair
+```
+
+# Null Alleles
+```{r}
+# Null alleles: depends on method! See help file.
+Null.alleles <- PopGenReport::null.all(Frogs.genind)
+```
+
+# Genetic Diversity
+
+## allelic richness
+
+```{r}
+Sum <- adegenet::summary(Frogs.genind)
+names(Sum)
+par(mar=c(5.5, 4.5,1,1))
+barplot(Sum$pop.n.all, las=3, 
+       xlab = "", ylab = "Number of alleles")
+
+plot(Sum$n.by.pop, Sum$pop.n.all, 
+       xlab = "Sample size", ylab = "Number of alleles")
+abline(lm(Sum$pop.n.all ~ Sum$n.by.pop), col = "red")
+```
+
+```{r}
+Richness <- PopGenReport::allel.rich(Frogs.genind, min.alleles = NULL)
+Richness$alleles.sampled
+
+par(mar=c(5.5, 4.5,1,1))
+barplot(Richness$mean.richness, las=3, ylab="Rarefied allelic richness (Ar)")
+plot(colMeans(Richness$pop.sizes), Richness$mean.richness,
+     xlab="Valid sample size", 
+     ylab="Rarefied allelic richness (Ar)")
+abline(lm(Richness$mean.richness ~ colMeans(Richness$pop.sizes)), col="red")
+
+```
+
+
