@@ -130,4 +130,37 @@ abline(lm(Richness$mean.richness ~ colMeans(Richness$pop.sizes)), col="red")
 
 ```
 
+# 6.4 Exercise
+
+```{r}
+Flowers <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
+as_tibble(Flowers)
+```
+
+## Filter offspring (seeds) from the dataset
+```{r}
+Flowers <- filter(Flowers, OffID==0)
+as_tibble(Flowers)
+```
+
+## Count the number of individuals in each pop
+Adults.by.site<-split(pulsatilla_adults, pulsatilla_adults$Population, T)
+sapply(Adults.by.site, count)
+
+Dataframe with the first 5 columns, then paste loc1_a:loc1_b, etc.
+```{r}
+Flowers <- data.frame(Flowers[,1:5],loc1 = paste(Flowers$loc1_a, Flowers$loc1_b, sep=":"), loc2 = paste(Flowers$loc2_a, Flowers$loc2_b, sep=":"), loc3 = paste(Flowers$loc3_a, Flowers$loc3_b, sep=":"), loc4 = paste(Flowers$loc4_a, Flowers$loc4_b, sep=":"), loc5 = paste(Flowers$loc5_a, Flowers$loc5_b, sep=":"), loc6 = paste(Flowers$loc6_a, Flowers$loc6_b, sep=":"), loc7 = paste(Flowers$loc7_a, Flowers$loc7_b, sep=":"))
+as_tibble(Flowers)
+```
+
+Create 'genind' object:
+```{r}
+Flowers.genind <- df2genind(X=Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names= Flowers$ID, loc.names=names(Flowers[,c(6:12)]), pop=Flowers$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+```
+
+Get info on genind object:
+```{r}
+Flowers.genind
+summary(Flowers.genind)
+```
 
