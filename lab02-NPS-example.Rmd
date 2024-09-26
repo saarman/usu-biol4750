@@ -155,5 +155,16 @@ Get info on genind object:
 Flowers.genind
 summary(Flowers.genind)
 ```
-
 Number of individuals per group/pop is 55-128.
+
+## With Gstudio this time
+```{r}
+Flowers <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
+
+g.Flowers <- read_population(system.file("extdata", "pulsatilla_genotypes.csv",package = "LandGenCourse"),type = "column",locus.columns = c(6:19))
+
+g.Flowers
+
+View(g.Flowers)
+```
+

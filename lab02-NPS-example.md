@@ -407,8 +407,8 @@ Download file:
 
 Import from csv as data frame:
 
-    Frogs <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
-    as_tibble(Frogs)
+    Flowers <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
+    as_tibble(Flowers)
 
     ## # A tibble: 536 × 19
     ##       ID OffID Population        X        Y loc1_a loc1_b loc2_a loc2_b loc3_a
@@ -429,15 +429,15 @@ Import from csv as data frame:
 
 Create ‘genind’ object:
 
-    Frogs.genind <- df2genind(X=Frogs[,c(6:19)], sep="\t", ncode=NULL, ind.names= Frogs$ID, loc.names=NULL, pop=Frogs$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+    Flowers.genind <- df2genind(X=Flowers[,c(6:19)], sep="\t", ncode=NULL, ind.names= Flowers$ID, loc.names=NULL, pop=Flowers$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
 
-    ## Warning in df2genind(X = Frogs[, c(6:19)], sep = "\t", ncode = NULL, ind.names
-    ## = Frogs$ID, : duplicate labels detected for some individuals; using generic
-    ## labels
+    ## Warning in df2genind(X = Flowers[, c(6:19)], sep = "\t", ncode = NULL,
+    ## ind.names = Flowers$ID, : duplicate labels detected for some individuals; using
+    ## generic labels
 
 Get info on genind object:
 
-    Frogs.genind
+    Flowers.genind
 
     ## /// GENIND OBJECT /////////
     ## 
@@ -450,8 +450,8 @@ Get info on genind object:
     ##    @all.names: list of allele names for each locus
     ##    @ploidy: ploidy of each individual  (range: 2-2)
     ##    @type:  codom
-    ##    @call: df2genind(X = Frogs[, c(6:19)], sep = "\t", ncode = NULL, ind.names = Frogs$ID, 
-    ##     loc.names = NULL, pop = Frogs$Population, NA.char = "NA", 
+    ##    @call: df2genind(X = Flowers[, c(6:19)], sep = "\t", ncode = NULL, ind.names = Flowers$ID, 
+    ##     loc.names = NULL, pop = Flowers$Population, NA.char = "NA", 
     ##     ploidy = 2, type = "codom", strata = NULL, hierarchy = NULL)
     ## 
     ##  // Optional content
@@ -460,10 +460,10 @@ Get info on genind object:
 Here, there is a problem because the genind object has 14 loci, but
 really this should be only 7 loci.
 
-Going back to the Frogs dataframe and combining loci before creating the
-genind object
+Going back to the Flowers dataframe and combining loci before creating
+the genind object
 
-    as_tibble(Frogs)
+    as_tibble(Flowers)
 
     ## # A tibble: 536 × 19
     ##       ID OffID Population        X        Y loc1_a loc1_b loc2_a loc2_b loc3_a
@@ -485,8 +485,8 @@ genind object
 I’ll make a new data frame with the first 5 columns, then paste
 loc1\_a:loc1\_b, etc.
 
-    Frogs <- data.frame(Frogs[,1:5],loc1 = paste(Frogs$loc1_a, Frogs$loc1_b, sep=":"), loc2 = paste(Frogs$loc2_a, Frogs$loc2_b, sep=":"), loc3 = paste(Frogs$loc3_a, Frogs$loc3_b, sep=":"), loc4 = paste(Frogs$loc4_a, Frogs$loc4_b, sep=":"), loc5 = paste(Frogs$loc5_a, Frogs$loc5_b, sep=":"), loc6 = paste(Frogs$loc6_a, Frogs$loc6_b, sep=":"), loc7 = paste(Frogs$loc7_a, Frogs$loc7_b, sep=":"))
-    as_tibble(Frogs)
+    Flowers <- data.frame(Flowers[,1:5],loc1 = paste(Flowers$loc1_a, Flowers$loc1_b, sep=":"), loc2 = paste(Flowers$loc2_a, Flowers$loc2_b, sep=":"), loc3 = paste(Flowers$loc3_a, Flowers$loc3_b, sep=":"), loc4 = paste(Flowers$loc4_a, Flowers$loc4_b, sep=":"), loc5 = paste(Flowers$loc5_a, Flowers$loc5_b, sep=":"), loc6 = paste(Flowers$loc6_a, Flowers$loc6_b, sep=":"), loc7 = paste(Flowers$loc7_a, Flowers$loc7_b, sep=":"))
+    as_tibble(Flowers)
 
     ## # A tibble: 536 × 12
     ##       ID OffID Population        X        Y loc1   loc2  loc3  loc4  loc5  loc6 
@@ -506,15 +506,15 @@ loc1\_a:loc1\_b, etc.
 
 Create ‘genind’ object:
 
-    Frogs.genind <- df2genind(X=Frogs[,c(6:12)], sep=":", ncode=NULL, ind.names= Frogs$ID, loc.names=names(Frogs[,c(6:12)]), pop=Frogs$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+    Flowers.genind <- df2genind(X=Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names= Flowers$ID, loc.names=names(Flowers[,c(6:12)]), pop=Flowers$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
 
-    ## Warning in df2genind(X = Frogs[, c(6:12)], sep = ":", ncode = NULL, ind.names =
-    ## Frogs$ID, : duplicate labels detected for some individuals; using generic
+    ## Warning in df2genind(X = Flowers[, c(6:12)], sep = ":", ncode = NULL, ind.names
+    ## = Flowers$ID, : duplicate labels detected for some individuals; using generic
     ## labels
 
 Get info on genind object:
 
-    Frogs.genind
+    Flowers.genind
 
     ## /// GENIND OBJECT /////////
     ## 
@@ -527,15 +527,15 @@ Get info on genind object:
     ##    @all.names: list of allele names for each locus
     ##    @ploidy: ploidy of each individual  (range: 2-2)
     ##    @type:  codom
-    ##    @call: df2genind(X = Frogs[, c(6:12)], sep = ":", ncode = NULL, ind.names = Frogs$ID, 
-    ##     loc.names = names(Frogs[, c(6:12)]), pop = Frogs$Population, 
+    ##    @call: df2genind(X = Flowers[, c(6:12)], sep = ":", ncode = NULL, ind.names = Flowers$ID, 
+    ##     loc.names = names(Flowers[, c(6:12)]), pop = Flowers$Population, 
     ##     NA.char = "NA", ploidy = 2, type = "codom", strata = NULL, 
     ##     hierarchy = NULL)
     ## 
     ##  // Optional content
     ##    @pop: population of each individual (group size range: 55-128)
 
-    summary(Frogs.genind)
+    summary(Flowers.genind)
 
     ## 
     ## // Number of individuals: 536
