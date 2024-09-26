@@ -2,7 +2,7 @@
 title: "Lab 3"
 author: "Norah Saarman"
 date: "2024-09-17"
-output: pdf_document
+output: md_document
 ---
 
 ```{r setup, include=FALSE}
@@ -145,8 +145,7 @@ as_tibble(Flowers)
 
 ## Count the number of individuals in each pop
 ```{r}
-Adults.by.site<-split(Flowers, Flowers$Population, T)
-sapply(Adults.by.site, count)
+table(Flowers$Population)
 ```
 
 Dataframe with the first 5 columns, then paste loc1_a:loc1_b, etc.
@@ -166,3 +165,15 @@ Flowers.genind
 summary(Flowers.genind)
 ```
 
+## With Gstudio this time
+```{r}
+g.Flowers <- read_population(system.file("extdata", "pulsatilla_genotypes.csv",package = "LandGenCourse"),type = "column",locus.columns = c(6:19), phased=F,sep=",",header = TRUE)
+
+g.Flowers <- filter(g.Flowers, OffID==0)
+
+g.Flowers.genind <- df2genind(X=g.Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flowers$ID, loc.names=NULL, pop=g.Flowers$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+g.Flowers.genind
+
+summary(g.Flowers.genind)
+```

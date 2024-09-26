@@ -49,7 +49,7 @@ data("ralu.loci")
 As a .csv file:
 
 To download the csv file...
-```{r}
+```{r,eval=FALSE}
 if(!dir.exists(paste0(here(),"/downloads"))) dir.create(paste0(here(),"/downloads"))
 file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
           paste0(here(), "/downloads/ralu.loci.csv"), overwrite=FALSE)
@@ -69,7 +69,6 @@ dim(Frogs)
 ```
 ## Some useful file directory functions
 ```{r}
-here()
 #file.choose() but don't leave within code chunk without commenting it out
 
 paste0(here(),"/output","/gobblygook")
@@ -161,8 +160,18 @@ Number of individuals per group/pop is 55-128.
 ```{r}
 Flowers <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
 
-g.Flowers <- read_population(system.file("extdata", "pulsatilla_genotypes.csv",package = "LandGenCourse"),type = "column",locus.columns = c(6:19))
+g.Flowers <- read_population(system.file("extdata", "pulsatilla_genotypes.csv",package = "LandGenCourse"),type = "column",locus.columns = c(6:19), phased=F,sep=",",header = TRUE)
 
 g.Flowers
-```
 
+g.Flowers.genind <- df2genind(X=g.Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flowers$ID, loc.names=NULL, pop=g.Flowers$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+g.Flowers.genind
+
+summary(g.Flowers.genind)
+```
+Compare the genind objects from both sources:
+```{r}
+summary(g.Flowers.genind)
+summary(Flowers.genind)
+```
