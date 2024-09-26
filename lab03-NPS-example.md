@@ -4,17 +4,7 @@
 
 Load libraries
 
-    #require(adegenet)
-    require(LandGenCourse)
-
-    ## Loading required package: LandGenCourse
-
-    #require(pegas)       
-    require(PopGenReport)
-
-    ## Loading required package: PopGenReport
-
-    ## Loading required package: knitr
+    require(adegenet)
 
     ## Loading required package: adegenet
 
@@ -27,9 +17,36 @@ Load libraries
     ##    > tutorials/doc/questions: 'adegenetWeb()' 
     ##    > bug reports/feature requests: adegenetIssues()
 
+    require(LandGenCourse)
+
+    ## Loading required package: LandGenCourse
+
+    require(pegas)       
+
+    ## Loading required package: pegas
+
+    ## Loading required package: ape
+
     ## Registered S3 method overwritten by 'pegas':
     ##   method      from
     ##   print.amova ade4
+
+    ## 
+    ## Attaching package: 'pegas'
+
+    ## The following object is masked from 'package:ape':
+    ## 
+    ##     mst
+
+    ## The following object is masked from 'package:ade4':
+    ## 
+    ##     amova
+
+    require(PopGenReport)
+
+    ## Loading required package: PopGenReport
+
+    ## Loading required package: knitr
 
     ## Registered S3 method overwritten by 'GGally':
     ##   method from   
@@ -45,6 +62,10 @@ Load libraries
 
     ## 
     ## Attaching package: 'dplyr'
+
+    ## The following object is masked from 'package:ape':
+    ## 
+    ##     where
 
     ## The following objects are masked from 'package:stats':
     ## 
@@ -135,12 +156,12 @@ Test for HWE with pegas:
 
     ##     chi^2 df Pr(chi^2 >) Pr.exact
     ## A  40.462  3       0.000    0.000
-    ## B  17.135  6       0.009    0.022
+    ## B  17.135  6       0.009    0.028
     ## C 136.522  6       0.000    0.000
     ## D  83.338  6       0.000    0.000
     ## E 226.803 36       0.000    0.000
     ## F   0.024  3       0.999    1.000
-    ## G  12.349  6       0.055    0.005
+    ## G  12.349  6       0.055    0.007
     ## H  76.813 28       0.000    0.000
 
     # Chi-squared test: p-value
@@ -176,18 +197,18 @@ Test for HWE with pegas:
     ## MC permuation test (p-values):
 
     ##                A     B     C     D     E F     G     H
-    ## Airplane   0.015 1.000 1.000 0.389 0.608 1 0.266 0.014
-    ## Bachelor   1.000 0.422 1.000 1.000 0.874 1 0.483 0.598
-    ## BarkingFox 1.000 0.224 0.059 1.000 0.732 1 1.000 0.153
-    ## Bob        1.000 1.000 1.000 1.000 0.016 1 1.000 0.261
-    ## Cache      1.000 0.418 0.138 1.000 1.000 1 1.000 0.630
-    ## Egg        1.000 1.000 1.000 1.000 0.080 1 0.542 0.464
-    ## Frog       1.000 1.000 0.082 1.000 0.440 1 1.000 0.153
-    ## GentianL   1.000 0.072 1.000 0.071 0.674 1 0.667 0.158
-    ## ParagonL   1.000 0.156 1.000 1.000 1.000 1 0.301 0.080
-    ## Pothole    1.000 1.000 1.000 1.000 0.529 1 0.537 1.000
-    ## ShipIsland 1.000 0.589 1.000 0.712 0.107 1 0.554 0.469
-    ## Skyhigh    1.000 0.342 0.177 0.094 0.118 1 0.070 0.028
+    ## Airplane   0.013 1.000 1.000 0.398 0.620 1 0.256 0.006
+    ## Bachelor   1.000 0.404 1.000 1.000 0.858 1 0.480 0.631
+    ## BarkingFox 1.000 0.225 0.062 1.000 0.757 1 1.000 0.189
+    ## Bob        1.000 1.000 1.000 1.000 0.017 1 1.000 0.276
+    ## Cache      1.000 0.391 0.152 1.000 1.000 1 1.000 0.620
+    ## Egg        1.000 1.000 1.000 1.000 0.087 1 0.521 0.449
+    ## Frog       1.000 1.000 0.073 1.000 0.449 1 1.000 0.183
+    ## GentianL   1.000 0.048 1.000 0.052 0.664 1 0.614 0.154
+    ## ParagonL   1.000 0.164 1.000 1.000 1.000 1 0.308 0.086
+    ## Pothole    1.000 1.000 1.000 1.000 0.516 1 0.528 1.000
+    ## ShipIsland 1.000 0.647 1.000 0.667 0.156 1 0.531 0.460
+    ## Skyhigh    1.000 0.342 0.167 0.100 0.112 1 0.086 0.045
 
     alpha=0.05 # /96
     Prop.loci.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 2, mean), 
@@ -196,7 +217,7 @@ Test for HWE with pegas:
 
     ##        Chisq         MC
     ## A 0.00000000 0.08333333
-    ## B 0.00000000 0.00000000
+    ## B 0.00000000 0.08333333
     ## C 0.16666667 0.00000000
     ## D 0.16666667 0.00000000
     ## E 0.16666667 0.08333333
@@ -216,7 +237,7 @@ Test for HWE with pegas:
     ## Cache      0.125 0.000
     ## Egg        0.000 0.000
     ## Frog       0.000 0.000
-    ## GentianL   0.125 0.000
+    ## GentianL   0.125 0.125
     ## ParagonL   0.125 0.000
     ## Pothole    0.000 0.000
     ## ShipIsland 0.125 0.000
@@ -241,7 +262,7 @@ Test for HWE with pegas:
     ## Cache      0.125 0.000     0.000      0
     ## Egg        0.000 0.000     0.000      0
     ## Frog       0.000 0.000     0.000      0
-    ## GentianL   0.125 0.000     0.000      0
+    ## GentianL   0.125 0.125     0.000      0
     ## ParagonL   0.125 0.000     0.125      0
     ## Pothole    0.000 0.000     0.000      0
     ## ShipIsland 0.125 0.000     0.000      0
@@ -335,3 +356,132 @@ Test for HWE with pegas:
     abline(lm(Richness$mean.richness ~ colMeans(Richness$pop.sizes)), col="red")
 
 ![](lab03-NPS-example_files/figure-markdown_strict/unnamed-chunk-10-2.png)
+
+# 6.4 Exercise
+
+    Flowers <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
+    as_tibble(Flowers)
+
+    ## # A tibble: 536 × 19
+    ##       ID OffID Population        X        Y loc1_a loc1_b loc2_a loc2_b loc3_a
+    ##    <int> <int> <chr>         <dbl>    <dbl>  <int>  <int>  <int>  <int>  <int>
+    ##  1    62     0 A21        4426941. 5427173.    340    340    422    422    413
+    ##  2    64     0 A21        4426933. 5427178.    334    334    424    424    417
+    ##  3    65     0 A21        4426936. 5427173.    338    340    417    422    417
+    ##  4    66     0 A21        4426937. 5427174.    340    344    422    422    411
+    ##  5    68     0 A21        4426934. 5427171.    336    342    417    422    423
+    ##  6    69     0 A21        4426933. 5427166.    336    346    422    422    417
+    ##  7    75     0 A21        4426925. 5427175.    340    340    422    422    415
+    ##  8    76     0 A21        4426925. 5427173.    338    340    417    422    413
+    ##  9    77     0 A21        4426922. 5427174.    344    352    422    422    415
+    ## 10    78     0 A21        4426922. 5427174.    342    352    417    424    425
+    ## # ℹ 526 more rows
+    ## # ℹ 9 more variables: loc3_b <int>, loc4_a <int>, loc4_b <int>, loc5_a <int>,
+    ## #   loc5_b <int>, loc6_a <int>, loc6_b <int>, loc7_a <int>, loc7_b <int>
+
+## Filter offspring (seeds) from the dataset
+
+    Flowers <- filter(Flowers, OffID==0)
+    as_tibble(Flowers)
+
+    ## # A tibble: 221 × 19
+    ##       ID OffID Population        X        Y loc1_a loc1_b loc2_a loc2_b loc3_a
+    ##    <int> <int> <chr>         <dbl>    <dbl>  <int>  <int>  <int>  <int>  <int>
+    ##  1    62     0 A21        4426941. 5427173.    340    340    422    422    413
+    ##  2    64     0 A21        4426933. 5427178.    334    334    424    424    417
+    ##  3    65     0 A21        4426936. 5427173.    338    340    417    422    417
+    ##  4    66     0 A21        4426937. 5427174.    340    344    422    422    411
+    ##  5    68     0 A21        4426934. 5427171.    336    342    417    422    423
+    ##  6    69     0 A21        4426933. 5427166.    336    346    422    422    417
+    ##  7    75     0 A21        4426925. 5427175.    340    340    422    422    415
+    ##  8    76     0 A21        4426925. 5427173.    338    340    417    422    413
+    ##  9    77     0 A21        4426922. 5427174.    344    352    422    422    415
+    ## 10    78     0 A21        4426922. 5427174.    342    352    417    424    425
+    ## # ℹ 211 more rows
+    ## # ℹ 9 more variables: loc3_b <int>, loc4_a <int>, loc4_b <int>, loc5_a <int>,
+    ## #   loc5_b <int>, loc6_a <int>, loc6_b <int>, loc7_a <int>, loc7_b <int>
+
+## Count the number of individuals in each pop
+
+    Adults.by.site<-split(Flowers, Flowers$Population, T)
+    sapply(Adults.by.site, count)
+
+    ## $A03.n
+    ## [1] 42
+    ## 
+    ## $A21.n
+    ## [1] 21
+    ## 
+    ## $A25.n
+    ## [1] 56
+    ## 
+    ## $A26.n
+    ## [1] 21
+    ## 
+    ## $A41.n
+    ## [1] 14
+    ## 
+    ## $A45.n
+    ## [1] 22
+    ## 
+    ## $G05a.n
+    ## [1] 45
+
+Dataframe with the first 5 columns, then paste loc1\_a:loc1\_b, etc.
+
+    Flowers <- data.frame(Flowers[,1:5],loc1 = paste(Flowers$loc1_a, Flowers$loc1_b, sep=":"), loc2 = paste(Flowers$loc2_a, Flowers$loc2_b, sep=":"), loc3 = paste(Flowers$loc3_a, Flowers$loc3_b, sep=":"), loc4 = paste(Flowers$loc4_a, Flowers$loc4_b, sep=":"), loc5 = paste(Flowers$loc5_a, Flowers$loc5_b, sep=":"), loc6 = paste(Flowers$loc6_a, Flowers$loc6_b, sep=":"), loc7 = paste(Flowers$loc7_a, Flowers$loc7_b, sep=":"))
+    as_tibble(Flowers)
+
+    ## # A tibble: 221 × 12
+    ##       ID OffID Population        X        Y loc1   loc2  loc3  loc4  loc5  loc6 
+    ##    <int> <int> <chr>         <dbl>    <dbl> <chr>  <chr> <chr> <chr> <chr> <chr>
+    ##  1    62     0 A21        4426941. 5427173. 340:3… 422:… 413:… 446:… 121:… 155:…
+    ##  2    64     0 A21        4426933. 5427178. 334:3… 424:… 417:… 444:… 122:… 155:…
+    ##  3    65     0 A21        4426936. 5427173. 338:3… 417:… 417:… 446:… 135:… 153:…
+    ##  4    66     0 A21        4426937. 5427174. 340:3… 422:… 411:… 446:… 122:… 157:…
+    ##  5    68     0 A21        4426934. 5427171. 336:3… 417:… 423:… 448:… 119:… 155:…
+    ##  6    69     0 A21        4426933. 5427166. 336:3… 422:… 417:… 444:… 122:… 155:…
+    ##  7    75     0 A21        4426925. 5427175. 340:3… 422:… 415:… 442:… 121:… 152:…
+    ##  8    76     0 A21        4426925. 5427173. 338:3… 417:… 413:… 446:… 126:… 155:…
+    ##  9    77     0 A21        4426922. 5427174. 344:3… 422:… 415:… 446:… 121:… 155:…
+    ## 10    78     0 A21        4426922. 5427174. 342:3… 417:… 425:… 446:… 121:… 157:…
+    ## # ℹ 211 more rows
+    ## # ℹ 1 more variable: loc7 <chr>
+
+Create ‘genind’ object:
+
+    Flowers.genind <- df2genind(X=Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names= Flowers$ID, loc.names=names(Flowers[,c(6:12)]), pop=Flowers$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+Get info on genind object:
+
+    Flowers.genind
+
+    ## /// GENIND OBJECT /////////
+    ## 
+    ##  // 221 individuals; 7 loci; 105 alleles; size: 130.8 Kb
+    ## 
+    ##  // Basic content
+    ##    @tab:  221 x 105 matrix of allele counts
+    ##    @loc.n.all: number of alleles per locus (range: 8-25)
+    ##    @loc.fac: locus factor for the 105 columns of @tab
+    ##    @all.names: list of allele names for each locus
+    ##    @ploidy: ploidy of each individual  (range: 2-2)
+    ##    @type:  codom
+    ##    @call: df2genind(X = Flowers[, c(6:12)], sep = ":", ncode = NULL, ind.names = Flowers$ID, 
+    ##     loc.names = names(Flowers[, c(6:12)]), pop = Flowers$Population, 
+    ##     NA.char = "NA", ploidy = 2, type = "codom", strata = NULL, 
+    ##     hierarchy = NULL)
+    ## 
+    ##  // Optional content
+    ##    @pop: population of each individual (group size range: 14-56)
+
+    summary(Flowers.genind)
+
+    ## 
+    ## // Number of individuals: 221
+    ## // Group sizes: 21 56 21 22 14 42 45
+    ## // Number of alleles per locus: 18 8 25 8 19 14 13
+    ## // Number of alleles per group: 63 68 54 50 51 73 53
+    ## // Percentage of missing data: 0.9 %
+    ## // Observed heterozygosity: 0.74 0.54 0.89 0.71 0.74 0.68 0.74
+    ## // Expected heterozygosity: 0.83 0.57 0.89 0.74 0.81 0.76 0.83

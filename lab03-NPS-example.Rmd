@@ -2,7 +2,7 @@
 title: "Lab 3"
 author: "Norah Saarman"
 date: "2024-09-17"
-output: md_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -14,9 +14,9 @@ https://bookdown.org/hhwagner1/LandGenCourse_book/WE_3.html
 
 Load libraries
 ```{r}
-#require(adegenet)
+require(adegenet)
 require(LandGenCourse)
-#require(pegas)       
+require(pegas)       
 require(PopGenReport)
 require(dplyr)
 require(poppr) 
@@ -133,7 +133,7 @@ abline(lm(Richness$mean.richness ~ colMeans(Richness$pop.sizes)), col="red")
 # 6.4 Exercise
 
 ```{r}
-Flowers <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
+Flowers <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
 as_tibble(Flowers)
 ```
 
@@ -144,8 +144,10 @@ as_tibble(Flowers)
 ```
 
 ## Count the number of individuals in each pop
-Adults.by.site<-split(pulsatilla_adults, pulsatilla_adults$Population, T)
+```{r}
+Adults.by.site<-split(Flowers, Flowers$Population, T)
 sapply(Adults.by.site, count)
+```
 
 Dataframe with the first 5 columns, then paste loc1_a:loc1_b, etc.
 ```{r}
