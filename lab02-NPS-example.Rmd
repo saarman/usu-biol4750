@@ -164,7 +164,5 @@ Flowers <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), heade
 g.Flowers <- read_population(system.file("extdata", "pulsatilla_genotypes.csv",package = "LandGenCourse"),type = "column",locus.columns = c(6:19))
 
 g.Flowers
-
-View(g.Flowers)
 ```
 
