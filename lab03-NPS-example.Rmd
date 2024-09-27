@@ -142,11 +142,26 @@ Using adegenet and base R
 ```{r}
 library(adegenet)
 
-# read in as data frame
+# 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
+# with base R function read.csv()
 Flowers <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
 
-# Filter offspring (seeds) from the dataset
-Flowers <- filter(Flowers, OffID==0)
+# 2. Select only adults with base R indexing of data frame 
+# rows where OffID==0, all columns
+Flowers <- Flowers[Flowers$OffID==0,]
+
+# 3. Combine columns with base R function paste()
+Flowers <- data.frame(Flowers[,1:5],loc1 = paste(Flowers[,6:7], sep=":"), 
+                                    loc2 = paste(Flowers[,8:9], sep=":"), 
+                                    loc3 = paste(Flowers[,10:11], sep=":"), 
+                                    loc4 = paste(Flowers[,12:13], sep=":"), 
+                                    loc5 = paste(Flowers[,14:15], sep=":"),  
+                                    loc6 = paste(Flowers[,16:17], sep=":"),  
+                                    loc7 = paste(Flowers[,18:19], sep=":"))
+
+# 4. Create genind object with "adegenet" function df2genind() 
+# using NA.char = "NA"
+Flowers.genind <- df2genind(X=Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names= Flowers$ID, loc.names=names(Flowers[,c(6:12)]), pop=Flowers$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
 ```
 
 # Count the number of individuals in each pop
@@ -154,15 +169,14 @@ Flowers <- filter(Flowers, OffID==0)
 table(Flowers$Population)
 ```
 
-Dataframe with the first 5 columns, then paste loc1_a:loc1_b, etc.
+
 ```{r}
 Flowers <- data.frame(Flowers[,1:5],loc1 = paste(Flowers$loc1_a, Flowers$loc1_b, sep=":"), loc2 = paste(Flowers$loc2_a, Flowers$loc2_b, sep=":"), loc3 = paste(Flowers$loc3_a, Flowers$loc3_b, sep=":"), loc4 = paste(Flowers$loc4_a, Flowers$loc4_b, sep=":"), loc5 = paste(Flowers$loc5_a, Flowers$loc5_b, sep=":"), loc6 = paste(Flowers$loc6_a, Flowers$loc6_b, sep=":"), loc7 = paste(Flowers$loc7_a, Flowers$loc7_b, sep=":"))
-as_tibble(Flowers)
 ```
 
 Create 'genind' object:
 ```{r}
-Flowers.genind <- df2genind(X=Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names= Flowers$ID, loc.names=names(Flowers[,c(6:12)]), pop=Flowers$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
 ```
 
 Get info on genind object:
