@@ -13,13 +13,14 @@ knitr::opts_chunk$set(echo = TRUE)
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_3.html
 
 Load libraries
-```{r}
+```{r, include = FALSE}
 require(adegenet)
 require(LandGenCourse)
 require(pegas)       
 require(PopGenReport)
 require(dplyr)
 require(poppr) 
+require(here)
 ```
 
 ## 1. Overview
