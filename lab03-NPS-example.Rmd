@@ -137,19 +137,18 @@ No longer correlated with sample size.
 Task: Drop offspring (seeds, OffID==1) from dataset pulsatilla_genotypes.csv, check for HWE by site and locus and calculate Hexp for each site.
 
 ## Drop offspring
-
+Using adegenet and base R
 ```{r}
+library(adegenet)
+
+# read in as data frame
 Flowers <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
-as_tibble(Flowers)
-```
 
-## Filter offspring (seeds) from the dataset
-```{r}
+# Filter offspring (seeds) from the dataset
 Flowers <- filter(Flowers, OffID==0)
-as_tibble(Flowers)
 ```
 
-## Count the number of individuals in each pop
+# Count the number of individuals in each pop
 ```{r}
 table(Flowers$Population)
 ```
