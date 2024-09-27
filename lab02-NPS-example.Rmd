@@ -2,7 +2,7 @@
 title: "Lab 2"
 author: "Norah Saarman"
 date: "2024-09-12"
-output: md_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Section 4.3 Worked Example
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_1.html
 
-Make sure we have the packages:
+Make sure we have the packages, ONLY run once:
 
 if(!require("adegenet")) install.packages("adegenet")
 if(!requireNamespace("popgraph", quietly = TRUE))
@@ -25,8 +25,7 @@ if(!requireNamespace("gstudio", quietly = TRUE)) remotes::install_github("dyerla
 
 install.packages("here")
 
-Load libraries
-
+Load libraries (run every time)
 ```{r}
 library(adegenet)
 library(gstudio)
@@ -74,7 +73,6 @@ dim(Frogs)
 paste0(here(),"/output","/gobblygook")
 ```
 ## Save output file
-
 ```{r}
 if(!dir.exists(paste0(here(),"/output"))) dir.create(paste0(here(),"/output"))
 
@@ -87,7 +85,6 @@ write.csv(ralu.loci, paste0(here(),"/output/ralu.loci.csv"),
 Frogs[,c(4:11)]
 
 Frogs.genind <- df2genind(X=Frogs[,c(4:11)], sep=":", ncode=NULL, ind.names= Frogs$FrogID, loc.names=NULL, pop=Frogs$Pop, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
-
 ```
 ## Check the genind object
 
@@ -158,9 +155,10 @@ Number of individuals per group/pop is 55-128.
 
 ## With Gstudio this time
 ```{r}
-Flowers <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
+library(gstudio)
+library(adegenet)
 
-g.Flowers <- read_population(system.file("extdata", "pulsatilla_genotypes.csv",package = "LandGenCourse"),type = "column",locus.columns = c(6:19), phased=F,sep=",",header = TRUE)
+g.Flowers <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
 
 g.Flowers
 

@@ -79,8 +79,6 @@ To download the csv file…
     file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
               paste0(here(), "/downloads/ralu.loci.csv"), overwrite=FALSE)
 
-    ## [1] FALSE
-
 ## 2. Import from csv file:
 
     Frogs <- read.csv(file="./downloads/ralu.loci.csv",header=TRUE)
@@ -126,10 +124,6 @@ Adding a column that gives us Frogs$FrogID
     ## [1] 181  11
 
 ## Some useful file directory functions
-
-    here()
-
-    ## [1] "/uufs/chpc.utah.edu/common/home/u6036559/git/usu-biol4750"
 
     #file.choose() but don't leave within code chunk without commenting it out
 
@@ -550,9 +544,10 @@ Number of individuals per group/pop is 55-128.
 
 ## With Gstudio this time
 
-    Flowers <- read.csv(paste0(here(), "/downloads/pulsatilla_genotypes.csv"), header=TRUE)
+    library(gstudio)
+    library(adegenet)
 
-    g.Flowers <- read_population(system.file("extdata", "pulsatilla_genotypes.csv",package = "LandGenCourse"),type = "column",locus.columns = c(6:19))
+    g.Flowers <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
 
     g.Flowers
 
@@ -1630,3 +1625,64 @@ Number of individuals per group/pop is 55-128.
     ## 534 121:122 152:159 240:240
     ## 535 133:137 157:159 242:262
     ## 536 122:137 155:157 244:256
+
+    g.Flowers.genind <- df2genind(X=g.Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flowers$ID, loc.names=NULL, pop=g.Flowers$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+    ## Warning in df2genind(X = g.Flowers[, c(6:12)], sep = ":", ncode = NULL, :
+    ## duplicate labels detected for some individuals; using generic labels
+
+    g.Flowers.genind
+
+    ## /// GENIND OBJECT /////////
+    ## 
+    ##  // 536 individuals; 7 loci; 109 alleles; size: 290.1 Kb
+    ## 
+    ##  // Basic content
+    ##    @tab:  536 x 109 matrix of allele counts
+    ##    @loc.n.all: number of alleles per locus (range: 8-26)
+    ##    @loc.fac: locus factor for the 109 columns of @tab
+    ##    @all.names: list of allele names for each locus
+    ##    @ploidy: ploidy of each individual  (range: 2-2)
+    ##    @type:  codom
+    ##    @call: df2genind(X = g.Flowers[, c(6:12)], sep = ":", ncode = NULL, 
+    ##     ind.names = g.Flowers$ID, loc.names = NULL, pop = g.Flowers$Population, 
+    ##     NA.char = "", ploidy = 2, type = "codom", strata = NULL, 
+    ##     hierarchy = NULL)
+    ## 
+    ##  // Optional content
+    ##    @pop: population of each individual (group size range: 55-128)
+
+    summary(g.Flowers.genind)
+
+    ## 
+    ## // Number of individuals: 536
+    ## // Group sizes: 69 128 78 75 71 55 60
+    ## // Number of alleles per locus: 19 8 26 9 20 14 13
+    ## // Number of alleles per group: 63 68 55 53 55 73 54
+    ## // Percentage of missing data: 1.79 %
+    ## // Observed heterozygosity: 0.6 0.48 0.72 0.57 0.6 0.6 0.61
+    ## // Expected heterozygosity: 0.83 0.59 0.88 0.75 0.77 0.79 0.85
+
+Compare the genind objects from both sources:
+
+    summary(g.Flowers.genind)
+
+    ## 
+    ## // Number of individuals: 536
+    ## // Group sizes: 69 128 78 75 71 55 60
+    ## // Number of alleles per locus: 19 8 26 9 20 14 13
+    ## // Number of alleles per group: 63 68 55 53 55 73 54
+    ## // Percentage of missing data: 1.79 %
+    ## // Observed heterozygosity: 0.6 0.48 0.72 0.57 0.6 0.6 0.61
+    ## // Expected heterozygosity: 0.83 0.59 0.88 0.75 0.77 0.79 0.85
+
+    summary(Flowers.genind)
+
+    ## 
+    ## // Number of individuals: 536
+    ## // Group sizes: 69 128 78 75 71 55 60
+    ## // Number of alleles per locus: 19 8 26 9 20 14 13
+    ## // Number of alleles per group: 63 68 55 53 55 73 54
+    ## // Percentage of missing data: 1.79 %
+    ## // Observed heterozygosity: 0.6 0.48 0.72 0.57 0.6 0.6 0.61
+    ## // Expected heterozygosity: 0.83 0.59 0.88 0.75 0.77 0.79 0.85

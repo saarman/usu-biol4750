@@ -156,12 +156,12 @@ Test for HWE with pegas:
 
     ##     chi^2 df Pr(chi^2 >) Pr.exact
     ## A  40.462  3       0.000    0.000
-    ## B  17.135  6       0.009    0.028
+    ## B  17.135  6       0.009    0.039
     ## C 136.522  6       0.000    0.000
     ## D  83.338  6       0.000    0.000
     ## E 226.803 36       0.000    0.000
     ## F   0.024  3       0.999    1.000
-    ## G  12.349  6       0.055    0.007
+    ## G  12.349  6       0.055    0.004
     ## H  76.813 28       0.000    0.000
 
     # Chi-squared test: p-value
@@ -196,19 +196,19 @@ Test for HWE with pegas:
 
     ## MC permuation test (p-values):
 
-    ##                A     B     C     D     E F     G     H
-    ## Airplane   0.013 1.000 1.000 0.398 0.620 1 0.256 0.006
-    ## Bachelor   1.000 0.404 1.000 1.000 0.858 1 0.480 0.631
-    ## BarkingFox 1.000 0.225 0.062 1.000 0.757 1 1.000 0.189
-    ## Bob        1.000 1.000 1.000 1.000 0.017 1 1.000 0.276
-    ## Cache      1.000 0.391 0.152 1.000 1.000 1 1.000 0.620
-    ## Egg        1.000 1.000 1.000 1.000 0.087 1 0.521 0.449
-    ## Frog       1.000 1.000 0.073 1.000 0.449 1 1.000 0.183
-    ## GentianL   1.000 0.048 1.000 0.052 0.664 1 0.614 0.154
-    ## ParagonL   1.000 0.164 1.000 1.000 1.000 1 0.308 0.086
-    ## Pothole    1.000 1.000 1.000 1.000 0.516 1 0.528 1.000
-    ## ShipIsland 1.000 0.647 1.000 0.667 0.156 1 0.531 0.460
-    ## Skyhigh    1.000 0.342 0.167 0.100 0.112 1 0.086 0.045
+    ##               A     B     C     D     E F     G     H
+    ## Airplane   0.02 1.000 1.000 0.404 0.644 1 0.228 0.009
+    ## Bachelor   1.00 0.444 1.000 1.000 0.847 1 0.476 0.618
+    ## BarkingFox 1.00 0.213 0.064 1.000 0.754 1 1.000 0.147
+    ## Bob        1.00 1.000 1.000 1.000 0.012 1 1.000 0.272
+    ## Cache      1.00 0.382 0.131 1.000 1.000 1 1.000 0.611
+    ## Egg        1.00 1.000 1.000 1.000 0.103 1 0.549 0.397
+    ## Frog       1.00 1.000 0.077 1.000 0.440 1 1.000 0.159
+    ## GentianL   1.00 0.071 1.000 0.061 0.652 1 0.627 0.128
+    ## ParagonL   1.00 0.161 1.000 1.000 1.000 1 0.333 0.069
+    ## Pothole    1.00 1.000 1.000 1.000 0.544 1 0.513 1.000
+    ## ShipIsland 1.00 0.632 1.000 0.699 0.131 1 0.561 0.441
+    ## Skyhigh    1.00 0.355 0.161 0.093 0.103 1 0.070 0.040
 
     alpha=0.05 # /96
     Prop.loci.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 2, mean), 
@@ -217,7 +217,7 @@ Test for HWE with pegas:
 
     ##        Chisq         MC
     ## A 0.00000000 0.08333333
-    ## B 0.00000000 0.08333333
+    ## B 0.00000000 0.00000000
     ## C 0.16666667 0.00000000
     ## D 0.16666667 0.00000000
     ## E 0.16666667 0.08333333
@@ -237,7 +237,7 @@ Test for HWE with pegas:
     ## Cache      0.125 0.000
     ## Egg        0.000 0.000
     ## Frog       0.000 0.000
-    ## GentianL   0.125 0.125
+    ## GentianL   0.125 0.000
     ## ParagonL   0.125 0.000
     ## Pothole    0.000 0.000
     ## ShipIsland 0.125 0.000
@@ -262,7 +262,7 @@ Test for HWE with pegas:
     ## Cache      0.125 0.000     0.000      0
     ## Egg        0.000 0.000     0.000      0
     ## Frog       0.000 0.000     0.000      0
-    ## GentianL   0.125 0.125     0.000      0
+    ## GentianL   0.125 0.000     0.000      0
     ## ParagonL   0.125 0.000     0.125      0
     ## Pothole    0.000 0.000     0.000      0
     ## ShipIsland 0.125 0.000     0.000      0
@@ -403,29 +403,11 @@ Test for HWE with pegas:
 
 ## Count the number of individuals in each pop
 
-    Adults.by.site<-split(Flowers, Flowers$Population, T)
-    sapply(Adults.by.site, count)
+    table(Flowers$Population)
 
-    ## $A03.n
-    ## [1] 42
     ## 
-    ## $A21.n
-    ## [1] 21
-    ## 
-    ## $A25.n
-    ## [1] 56
-    ## 
-    ## $A26.n
-    ## [1] 21
-    ## 
-    ## $A41.n
-    ## [1] 14
-    ## 
-    ## $A45.n
-    ## [1] 22
-    ## 
-    ## $G05a.n
-    ## [1] 45
+    ##  A03  A21  A25  A26  A41  A45 G05a 
+    ##   42   21   56   21   14   22   45
 
 Dataframe with the first 5 columns, then paste loc1\_a:loc1\_b, etc.
 
@@ -476,6 +458,74 @@ Get info on genind object:
     ##    @pop: population of each individual (group size range: 14-56)
 
     summary(Flowers.genind)
+
+    ## 
+    ## // Number of individuals: 221
+    ## // Group sizes: 21 56 21 22 14 42 45
+    ## // Number of alleles per locus: 18 8 25 8 19 14 13
+    ## // Number of alleles per group: 63 68 54 50 51 73 53
+    ## // Percentage of missing data: 0.9 %
+    ## // Observed heterozygosity: 0.74 0.54 0.89 0.71 0.74 0.68 0.74
+    ## // Expected heterozygosity: 0.83 0.57 0.89 0.74 0.81 0.76 0.83
+
+## With Gstudio this time
+
+    library(gstudio)
+
+    ## Warning: replacing previous import 'dplyr::union' by 'raster::union' when
+    ## loading 'gstudio'
+
+    ## Warning: replacing previous import 'dplyr::intersect' by 'raster::intersect'
+    ## when loading 'gstudio'
+
+    ## Warning: replacing previous import 'dplyr::select' by 'raster::select' when
+    ## loading 'gstudio'
+
+    ## Registered S3 method overwritten by 'gstudio':
+    ##   method      from    
+    ##   print.locus genetics
+
+    ## 
+    ## Attaching package: 'gstudio'
+
+    ## The following object is masked from 'package:pegas':
+    ## 
+    ##     Fst
+
+    ## The following objects are masked from 'package:adegenet':
+    ## 
+    ##     alleles, ploidy
+
+    library(adegenet)
+
+    g.Flowers <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
+
+    g.Flowers <- g.Flowers[g.Flowers$OffID==0,] # filter() is not working
+
+    g.Flowers.genind <- df2genind(X=g.Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flowers$ID, loc.names=NULL, pop=g.Flowers$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+    g.Flowers.genind
+
+    ## /// GENIND OBJECT /////////
+    ## 
+    ##  // 221 individuals; 7 loci; 105 alleles; size: 129.8 Kb
+    ## 
+    ##  // Basic content
+    ##    @tab:  221 x 105 matrix of allele counts
+    ##    @loc.n.all: number of alleles per locus (range: 8-25)
+    ##    @loc.fac: locus factor for the 105 columns of @tab
+    ##    @all.names: list of allele names for each locus
+    ##    @ploidy: ploidy of each individual  (range: 2-2)
+    ##    @type:  codom
+    ##    @call: df2genind(X = g.Flowers[, c(6:12)], sep = ":", ncode = NULL, 
+    ##     ind.names = g.Flowers$ID, loc.names = NULL, pop = g.Flowers$Population, 
+    ##     NA.char = "", ploidy = 2, type = "codom", strata = NULL, 
+    ##     hierarchy = NULL)
+    ## 
+    ##  // Optional content
+    ##    @pop: population of each individual (group size range: 14-56)
+
+    summary(g.Flowers.genind)
 
     ## 
     ## // Number of individuals: 221
