@@ -130,7 +130,8 @@ plot(colMeans(Richness$pop.sizes), Richness$mean.richness,
 abline(lm(Richness$mean.richness ~ colMeans(Richness$pop.sizes)), col="red")
 
 ```
-No longer correlated with sample size.
+No longer correlated with sample size.  
+\pagebreak
 
 # 6.4 Exercise
 
@@ -249,8 +250,6 @@ H.pop <- data.frame(Pop = names(Hobs.pop),
                     n = Sum[2]$n.by.pop,
                               Hobs = Hobs.pop,
                               Hexp = Hexp.pop)
-
-
 H.pop
 ```
 
