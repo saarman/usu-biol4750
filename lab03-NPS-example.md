@@ -5,82 +5,12 @@
 Load libraries
 
     require(adegenet)
-
-    ## Loading required package: adegenet
-
-    ## Loading required package: ade4
-
-    ## 
-    ##    /// adegenet 2.1.10 is loaded ////////////
-    ## 
-    ##    > overview: '?adegenet'
-    ##    > tutorials/doc/questions: 'adegenetWeb()' 
-    ##    > bug reports/feature requests: adegenetIssues()
-
     require(LandGenCourse)
-
-    ## Loading required package: LandGenCourse
-
     require(pegas)       
-
-    ## Loading required package: pegas
-
-    ## Loading required package: ape
-
-    ## Registered S3 method overwritten by 'pegas':
-    ##   method      from
-    ##   print.amova ade4
-
-    ## 
-    ## Attaching package: 'pegas'
-
-    ## The following object is masked from 'package:ape':
-    ## 
-    ##     mst
-
-    ## The following object is masked from 'package:ade4':
-    ## 
-    ##     amova
-
     require(PopGenReport)
-
-    ## Loading required package: PopGenReport
-
-    ## Loading required package: knitr
-
-    ## Registered S3 method overwritten by 'GGally':
-    ##   method from   
-    ##   +.gg   ggplot2
-
-    ## Registered S3 method overwritten by 'genetics':
-    ##   method      from 
-    ##   [.haplotype pegas
-
     require(dplyr)
-
-    ## Loading required package: dplyr
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following object is masked from 'package:ape':
-    ## 
-    ##     where
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
     require(poppr) 
-
-    ## Loading required package: poppr
-
-    ## This is poppr version 2.9.6. To get started, type package?poppr
-    ## OMP parallel support: available
+    require(here)
 
 ## 1. Overview
 
@@ -156,12 +86,12 @@ Test for HWE with pegas:
 
     ##     chi^2 df Pr(chi^2 >) Pr.exact
     ## A  40.462  3       0.000    0.000
-    ## B  17.135  6       0.009    0.039
+    ## B  17.135  6       0.009    0.024
     ## C 136.522  6       0.000    0.000
     ## D  83.338  6       0.000    0.000
     ## E 226.803 36       0.000    0.000
     ## F   0.024  3       0.999    1.000
-    ## G  12.349  6       0.055    0.004
+    ## G  12.349  6       0.055    0.010
     ## H  76.813 28       0.000    0.000
 
     # Chi-squared test: p-value
@@ -197,18 +127,18 @@ Test for HWE with pegas:
     ## MC permuation test (p-values):
 
     ##               A     B     C     D     E F     G     H
-    ## Airplane   0.02 1.000 1.000 0.404 0.644 1 0.228 0.009
-    ## Bachelor   1.00 0.444 1.000 1.000 0.847 1 0.476 0.618
-    ## BarkingFox 1.00 0.213 0.064 1.000 0.754 1 1.000 0.147
-    ## Bob        1.00 1.000 1.000 1.000 0.012 1 1.000 0.272
-    ## Cache      1.00 0.382 0.131 1.000 1.000 1 1.000 0.611
-    ## Egg        1.00 1.000 1.000 1.000 0.103 1 0.549 0.397
-    ## Frog       1.00 1.000 0.077 1.000 0.440 1 1.000 0.159
-    ## GentianL   1.00 0.071 1.000 0.061 0.652 1 0.627 0.128
-    ## ParagonL   1.00 0.161 1.000 1.000 1.000 1 0.333 0.069
-    ## Pothole    1.00 1.000 1.000 1.000 0.544 1 0.513 1.000
-    ## ShipIsland 1.00 0.632 1.000 0.699 0.131 1 0.561 0.441
-    ## Skyhigh    1.00 0.355 0.161 0.093 0.103 1 0.070 0.040
+    ## Airplane   0.02 1.000 1.000 0.391 0.638 1 0.254 0.014
+    ## Bachelor   1.00 0.434 1.000 1.000 0.875 1 0.462 0.628
+    ## BarkingFox 1.00 0.233 0.064 1.000 0.737 1 1.000 0.152
+    ## Bob        1.00 1.000 1.000 1.000 0.014 1 1.000 0.242
+    ## Cache      1.00 0.386 0.154 1.000 1.000 1 1.000 0.633
+    ## Egg        1.00 1.000 1.000 1.000 0.091 1 0.519 0.399
+    ## Frog       1.00 1.000 0.061 1.000 0.436 1 1.000 0.181
+    ## GentianL   1.00 0.061 1.000 0.057 0.657 1 0.647 0.131
+    ## ParagonL   1.00 0.182 1.000 1.000 1.000 1 0.315 0.057
+    ## Pothole    1.00 1.000 1.000 1.000 0.537 1 0.526 1.000
+    ## ShipIsland 1.00 0.629 1.000 0.685 0.135 1 0.566 0.439
+    ## Skyhigh    1.00 0.369 0.193 0.093 0.092 1 0.075 0.024
 
     alpha=0.05 # /96
     Prop.loci.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 2, mean), 
@@ -356,87 +286,43 @@ Test for HWE with pegas:
     abline(lm(Richness$mean.richness ~ colMeans(Richness$pop.sizes)), col="red")
 
 ![](lab03-NPS-example_files/figure-markdown_strict/unnamed-chunk-10-2.png)
+No longer correlated with sample size.  
 
 # 6.4 Exercise
 
-    Flowers <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
-    as_tibble(Flowers)
+Task: Drop offspring (seeds, OffID==1) from dataset
+pulsatilla\_genotypes.csv, check for HWE by site and locus and calculate
+Hexp for each site.
 
-    ## # A tibble: 536 × 19
-    ##       ID OffID Population        X        Y loc1_a loc1_b loc2_a loc2_b loc3_a
-    ##    <int> <int> <chr>         <dbl>    <dbl>  <int>  <int>  <int>  <int>  <int>
-    ##  1    62     0 A21        4426941. 5427173.    340    340    422    422    413
-    ##  2    64     0 A21        4426933. 5427178.    334    334    424    424    417
-    ##  3    65     0 A21        4426936. 5427173.    338    340    417    422    417
-    ##  4    66     0 A21        4426937. 5427174.    340    344    422    422    411
-    ##  5    68     0 A21        4426934. 5427171.    336    342    417    422    423
-    ##  6    69     0 A21        4426933. 5427166.    336    346    422    422    417
-    ##  7    75     0 A21        4426925. 5427175.    340    340    422    422    415
-    ##  8    76     0 A21        4426925. 5427173.    338    340    417    422    413
-    ##  9    77     0 A21        4426922. 5427174.    344    352    422    422    415
-    ## 10    78     0 A21        4426922. 5427174.    342    352    417    424    425
-    ## # ℹ 526 more rows
-    ## # ℹ 9 more variables: loc3_b <int>, loc4_a <int>, loc4_b <int>, loc5_a <int>,
-    ## #   loc5_b <int>, loc6_a <int>, loc6_b <int>, loc7_a <int>, loc7_b <int>
+## Drop offspring
 
-## Filter offspring (seeds) from the dataset
+Using adegenet and base R
 
-    Flowers <- filter(Flowers, OffID==0)
-    as_tibble(Flowers)
+    library(adegenet)
 
-    ## # A tibble: 221 × 19
-    ##       ID OffID Population        X        Y loc1_a loc1_b loc2_a loc2_b loc3_a
-    ##    <int> <int> <chr>         <dbl>    <dbl>  <int>  <int>  <int>  <int>  <int>
-    ##  1    62     0 A21        4426941. 5427173.    340    340    422    422    413
-    ##  2    64     0 A21        4426933. 5427178.    334    334    424    424    417
-    ##  3    65     0 A21        4426936. 5427173.    338    340    417    422    417
-    ##  4    66     0 A21        4426937. 5427174.    340    344    422    422    411
-    ##  5    68     0 A21        4426934. 5427171.    336    342    417    422    423
-    ##  6    69     0 A21        4426933. 5427166.    336    346    422    422    417
-    ##  7    75     0 A21        4426925. 5427175.    340    340    422    422    415
-    ##  8    76     0 A21        4426925. 5427173.    338    340    417    422    413
-    ##  9    77     0 A21        4426922. 5427174.    344    352    422    422    415
-    ## 10    78     0 A21        4426922. 5427174.    342    352    417    424    425
-    ## # ℹ 211 more rows
-    ## # ℹ 9 more variables: loc3_b <int>, loc4_a <int>, loc4_b <int>, loc5_a <int>,
-    ## #   loc5_b <int>, loc6_a <int>, loc6_b <int>, loc7_a <int>, loc7_b <int>
+    # 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
+    # with base R function read.csv()
+    Flr <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
 
-## Count the number of individuals in each pop
+    # 2. Select only adults with base R indexing of data frame 
+    # rows where OffID==0, all columns
+    Flr <- Flr[Flr$OffID==0,]
 
-    table(Flowers$Population)
+    # 3. Combine columns with base R function paste()
+    Flr <- data.frame(Flr[,1:5],loc1 = paste(Flr[,6],  Flr[,7], sep=":"), 
+                                loc2 = paste(Flr[,8],  Flr[,9], sep=":"), 
+                                loc3 = paste(Flr[,10], Flr[,11], sep=":"), 
+                                loc4 = paste(Flr[,12], Flr[,13], sep=":"), 
+                                loc5 = paste(Flr[,14], Flr[,15], sep=":"),  
+                                loc6 = paste(Flr[,16], Flr[,17], sep=":"),  
+                                loc7 = paste(Flr[,18], Flr[,19], sep=":"))
 
-    ## 
-    ##  A03  A21  A25  A26  A41  A45 G05a 
-    ##   42   21   56   21   14   22   45
+    # 4. Create genind object with "adegenet" function df2genind() 
+    # using NA.char = "NA"
+    Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL, ind.names= Flr$ID, loc.names=names(Flr[,c(6:12)]), pop=Flr$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
 
-Dataframe with the first 5 columns, then paste loc1\_a:loc1\_b, etc.
-
-    Flowers <- data.frame(Flowers[,1:5],loc1 = paste(Flowers$loc1_a, Flowers$loc1_b, sep=":"), loc2 = paste(Flowers$loc2_a, Flowers$loc2_b, sep=":"), loc3 = paste(Flowers$loc3_a, Flowers$loc3_b, sep=":"), loc4 = paste(Flowers$loc4_a, Flowers$loc4_b, sep=":"), loc5 = paste(Flowers$loc5_a, Flowers$loc5_b, sep=":"), loc6 = paste(Flowers$loc6_a, Flowers$loc6_b, sep=":"), loc7 = paste(Flowers$loc7_a, Flowers$loc7_b, sep=":"))
-    as_tibble(Flowers)
-
-    ## # A tibble: 221 × 12
-    ##       ID OffID Population        X        Y loc1   loc2  loc3  loc4  loc5  loc6 
-    ##    <int> <int> <chr>         <dbl>    <dbl> <chr>  <chr> <chr> <chr> <chr> <chr>
-    ##  1    62     0 A21        4426941. 5427173. 340:3… 422:… 413:… 446:… 121:… 155:…
-    ##  2    64     0 A21        4426933. 5427178. 334:3… 424:… 417:… 444:… 122:… 155:…
-    ##  3    65     0 A21        4426936. 5427173. 338:3… 417:… 417:… 446:… 135:… 153:…
-    ##  4    66     0 A21        4426937. 5427174. 340:3… 422:… 411:… 446:… 122:… 157:…
-    ##  5    68     0 A21        4426934. 5427171. 336:3… 417:… 423:… 448:… 119:… 155:…
-    ##  6    69     0 A21        4426933. 5427166. 336:3… 422:… 417:… 444:… 122:… 155:…
-    ##  7    75     0 A21        4426925. 5427175. 340:3… 422:… 415:… 442:… 121:… 152:…
-    ##  8    76     0 A21        4426925. 5427173. 338:3… 417:… 413:… 446:… 126:… 155:…
-    ##  9    77     0 A21        4426922. 5427174. 344:3… 422:… 415:… 446:… 121:… 155:…
-    ## 10    78     0 A21        4426922. 5427174. 342:3… 417:… 425:… 446:… 121:… 157:…
-    ## # ℹ 211 more rows
-    ## # ℹ 1 more variable: loc7 <chr>
-
-Create ‘genind’ object:
-
-    Flowers.genind <- df2genind(X=Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names= Flowers$ID, loc.names=names(Flowers[,c(6:12)]), pop=Flowers$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
-
-Get info on genind object:
-
-    Flowers.genind
+    # 5. Check genind object
+    Flr.genind
 
     ## /// GENIND OBJECT /////////
     ## 
@@ -449,15 +335,15 @@ Get info on genind object:
     ##    @all.names: list of allele names for each locus
     ##    @ploidy: ploidy of each individual  (range: 2-2)
     ##    @type:  codom
-    ##    @call: df2genind(X = Flowers[, c(6:12)], sep = ":", ncode = NULL, ind.names = Flowers$ID, 
-    ##     loc.names = names(Flowers[, c(6:12)]), pop = Flowers$Population, 
+    ##    @call: df2genind(X = Flr[, c(6:12)], sep = ":", ncode = NULL, ind.names = Flr$ID, 
+    ##     loc.names = names(Flr[, c(6:12)]), pop = Flr$Population, 
     ##     NA.char = "NA", ploidy = 2, type = "codom", strata = NULL, 
     ##     hierarchy = NULL)
     ## 
     ##  // Optional content
     ##    @pop: population of each individual (group size range: 14-56)
 
-    summary(Flowers.genind)
+    summary(Flr.genind)
 
     ## 
     ## // Number of individuals: 221
@@ -467,6 +353,14 @@ Get info on genind object:
     ## // Percentage of missing data: 0.9 %
     ## // Observed heterozygosity: 0.74 0.54 0.89 0.71 0.74 0.68 0.74
     ## // Expected heterozygosity: 0.83 0.57 0.89 0.74 0.81 0.76 0.83
+
+# Count the number of individuals in each pop
+
+    table(Flr$Population)
+
+    ## 
+    ##  A03  A21  A25  A26  A41  A45 G05a 
+    ##   42   21   56   21   14   22   45
 
 ## With Gstudio this time
 
@@ -498,13 +392,23 @@ Get info on genind object:
 
     library(adegenet)
 
-    g.Flowers <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
+    # 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
+    # with "gstudio" function read_population()
+    g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",
+                           type = "column",locus.columns = c(6:19))
 
-    g.Flowers <- g.Flowers[g.Flowers$OffID==0,] # filter() is not working
+    # 2. Select only adults with base R indexing of data frame 
+    # rows where OffID==0, all columns
+    g.Flr <- g.Flr[g.Flr$OffID==0,]
 
-    g.Flowers.genind <- df2genind(X=g.Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flowers$ID, loc.names=NULL, pop=g.Flowers$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+    # 3. Nothing to do here
 
-    g.Flowers.genind
+    # 4. Create genind object with "adegenet" function df2genind() 
+    # using NA.char = ""
+    g.Flr.genind <- df2genind(X=g.Flr[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flr$ID, loc.names=NULL, pop=g.Flr$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+    # 5. Check genind object
+    g.Flr.genind
 
     ## /// GENIND OBJECT /////////
     ## 
@@ -517,15 +421,14 @@ Get info on genind object:
     ##    @all.names: list of allele names for each locus
     ##    @ploidy: ploidy of each individual  (range: 2-2)
     ##    @type:  codom
-    ##    @call: df2genind(X = g.Flowers[, c(6:12)], sep = ":", ncode = NULL, 
-    ##     ind.names = g.Flowers$ID, loc.names = NULL, pop = g.Flowers$Population, 
-    ##     NA.char = "", ploidy = 2, type = "codom", strata = NULL, 
-    ##     hierarchy = NULL)
+    ##    @call: df2genind(X = g.Flr[, c(6:12)], sep = ":", ncode = NULL, ind.names = g.Flr$ID, 
+    ##     loc.names = NULL, pop = g.Flr$Population, NA.char = "", ploidy = 2, 
+    ##     type = "codom", strata = NULL, hierarchy = NULL)
     ## 
     ##  // Optional content
     ##    @pop: population of each individual (group size range: 14-56)
 
-    summary(g.Flowers.genind)
+    summary(g.Flr.genind)
 
     ## 
     ## // Number of individuals: 221
@@ -535,3 +438,146 @@ Get info on genind object:
     ## // Percentage of missing data: 0.9 %
     ## // Observed heterozygosity: 0.74 0.54 0.89 0.71 0.74 0.68 0.74
     ## // Expected heterozygosity: 0.83 0.57 0.89 0.74 0.81 0.76 0.83
+
+## Check for HWE by site and locus and calculate Hexp for each site
+
+Test for HWE with pegas by site
+
+    # Chi-squared test: p-value
+    HWE.test <- data.frame(sapply(seppop(g.Flr.genind), 
+                                  function(ls) pegas::hw.test(ls, B=0)[,3]))
+    HWE.test.chisq <- t(data.matrix(HWE.test))
+    {cat("Chi-squared test (p-values):", "\n")
+    round(HWE.test.chisq,3)}
+
+    ## Chi-squared test (p-values):
+
+    ##      loc1_a loc2_a loc3_a loc4_a loc5_a loc6_a loc7_a
+    ## A21   0.296  0.730  0.555  0.457  0.068  0.858  0.530
+    ## A25   0.069  0.992  0.404  0.076  0.018  0.930  0.587
+    ## A26   0.000  0.576  0.998  0.508  0.846  0.180  0.354
+    ## A45   0.983  0.828  0.442  0.178  0.359  0.120  0.244
+    ## A41   0.586  0.733  0.179  0.038  0.468  0.956  0.717
+    ## A03   1.000  0.193  0.040  0.047  0.000  0.970  0.490
+    ## G05a  0.436  0.672  0.121  0.954  0.394  0.973  0.104
+
+    # Monte Carlo: p-value
+    HWE.test <- data.frame(sapply(seppop(g.Flr.genind), 
+                                  function(ls) pegas::hw.test(ls, B=1000)[,4]))
+    HWE.test.MC <- t(data.matrix(HWE.test))
+    {cat("MC permuation test (p-values):", "\n")
+    round(HWE.test.MC,3)}
+
+    ## MC permuation test (p-values):
+
+    ##      loc1_a loc2_a loc3_a loc4_a loc5_a loc6_a loc7_a
+    ## A21   0.243  0.649  0.959  0.294  0.118  0.710  0.441
+    ## A25   0.207  1.000  0.346  0.086  0.622  0.592  0.322
+    ## A26   0.088  0.757  0.962  0.392  0.986  0.245  0.140
+    ## A45   0.808  0.483  0.512  0.059  0.246  0.006  0.663
+    ## A41   0.370  0.810  0.085  0.015  0.647  0.925  0.825
+    ## A03   0.878  0.039  0.293  0.070  0.006  0.717  0.387
+    ## G05a  0.119  0.552  0.011  0.968  0.152  0.397  0.178
+
+    alpha=0.05 # /96
+    Prop.loci.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 2, mean), 
+               MC=apply(HWE.test.MC<alpha, 2, mean))
+    Prop.loci.out.of.HWE             # Type this line again to see results table
+
+    ##            Chisq        MC
+    ## loc1_a 0.1428571 0.0000000
+    ## loc2_a 0.0000000 0.1428571
+    ## loc3_a 0.1428571 0.1428571
+    ## loc4_a 0.2857143 0.1428571
+    ## loc5_a 0.2857143 0.1428571
+    ## loc6_a 0.0000000 0.1428571
+    ## loc7_a 0.0000000 0.0000000
+
+    Prop.pops.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 1, mean), 
+               MC=apply(HWE.test.MC<alpha, 1, mean))
+    Prop.pops.out.of.HWE             
+
+    ##          Chisq        MC
+    ## A21  0.0000000 0.0000000
+    ## A25  0.1428571 0.0000000
+    ## A26  0.1428571 0.0000000
+    ## A45  0.0000000 0.1428571
+    ## A41  0.1428571 0.1428571
+    ## A03  0.4285714 0.2857143
+    ## G05a 0.0000000 0.1428571
+
+    Chisq.fdr <- matrix(p.adjust(HWE.test.chisq,method="fdr"), 
+                        nrow=nrow(HWE.test.chisq))
+    MC.fdr <- matrix(p.adjust(HWE.test.MC, method="fdr"), 
+                        nrow=nrow(HWE.test.MC))
+
+    Prop.pops.out.of.HWE <- data.frame(Chisq=apply(HWE.test.chisq<alpha, 1, mean), 
+               MC=apply(HWE.test.MC<alpha, 1, mean),
+               Chisq.fdr=apply(Chisq.fdr<alpha, 1, mean),
+               MC.fdr=apply(MC.fdr<alpha, 1, mean))
+    Prop.pops.out.of.HWE   
+
+    ##          Chisq        MC Chisq.fdr MC.fdr
+    ## A21  0.0000000 0.0000000 0.0000000      0
+    ## A25  0.1428571 0.0000000 0.0000000      0
+    ## A26  0.1428571 0.0000000 0.1428571      0
+    ## A45  0.0000000 0.1428571 0.0000000      0
+    ## A41  0.1428571 0.1428571 0.0000000      0
+    ## A03  0.4285714 0.2857143 0.1428571      0
+    ## G05a 0.0000000 0.1428571 0.0000000      0
+
+# Hexp for each site
+
+    Hobs <- t(sapply(seppop(g.Flr.genind), function(ls) summary(ls)$Hobs))
+    Hexp <- t(sapply(seppop(g.Flr.genind), function(ls) summary(ls)$Hexp))
+    {cat("Expected heterozygosity (Hexp):", "\n")
+    round(Hexp, 2)}
+
+    ## Expected heterozygosity (Hexp):
+
+    ##      loc1_a loc2_a loc3_a loc4_a loc5_a loc6_a loc7_a
+    ## A21    0.82   0.59   0.92   0.74   0.81   0.73   0.83
+    ## A25    0.87   0.59   0.87   0.70   0.64   0.77   0.86
+    ## A26    0.56   0.65   0.78   0.81   0.76   0.80   0.78
+    ## A45    0.78   0.56   0.86   0.67   0.73   0.74   0.80
+    ## A41    0.76   0.68   0.77   0.81   0.82   0.77   0.83
+    ## A03    0.67   0.60   0.89   0.58   0.85   0.67   0.72
+    ## G05a   0.85   0.33   0.83   0.75   0.82   0.50   0.48
+
+      par(mar=c(5.5, 4.5, 1, 1))
+      Hobs.pop <- apply(Hobs, MARGIN = 1, FUN = mean)
+      Hexp.pop <- apply(Hexp, 1, mean) 
+      barplot(Hexp.pop, ylim=c(0,1), las=3, ylab="Avg. Expected heterozygosity", xlab = "Site")
+
+![](lab03-NPS-example_files/figure-markdown_strict/unnamed-chunk-17-1.png)
+
+      barplot(Hobs.pop, ylim=c(0,1), las=3, ylab="Avg. Observed heterozygosity", xlab = "Site")
+
+![](lab03-NPS-example_files/figure-markdown_strict/unnamed-chunk-17-2.png)
+
+Data frame of summary statistics
+
+    Sum <- summary(g.Flr.genind)
+    H.pop <- data.frame(Pop = names(Hobs.pop),
+                        n = Sum[2]$n.by.pop,
+                                  Hobs = Hobs.pop,
+                                  Hexp = Hexp.pop)
+    H.pop
+
+    ##       Pop  n      Hobs      Hexp
+    ## A21   A21 21 0.7938776 0.7787476
+    ## A25   A25 56 0.7459098 0.7587271
+    ## A26   A26 21 0.7959184 0.7346939
+    ## A45   A45 22 0.7029375 0.7356625
+    ## A41   A41 14 0.8430141 0.7756482
+    ## A03   A03 42 0.6734694 0.7110058
+    ## G05a G05a 45 0.6279942 0.6503175
+
+Save “H.pop” for later in output file (eval = FALSE so that it doesn’t
+do this every time I knit)
+
+    saveRDS(H.pop, file = "./output/H.pop.rds")
+
+## Question: Which site had the lowest expected heterozygosity?
+
+Site G05a had the lowest average expected heterozygosity, at 0.6503175.

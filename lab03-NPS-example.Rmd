@@ -144,45 +144,33 @@ library(adegenet)
 
 # 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
 # with base R function read.csv()
-Flowers <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
+Flr <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
 
 # 2. Select only adults with base R indexing of data frame 
 # rows where OffID==0, all columns
-Flowers <- Flowers[Flowers$OffID==0,]
+Flr <- Flr[Flr$OffID==0,]
 
 # 3. Combine columns with base R function paste()
-Flowers <- data.frame(Flowers[,1:5],loc1 = paste(Flowers[,6:7], sep=":"), 
-                                    loc2 = paste(Flowers[,8:9], sep=":"), 
-                                    loc3 = paste(Flowers[,10:11], sep=":"), 
-                                    loc4 = paste(Flowers[,12:13], sep=":"), 
-                                    loc5 = paste(Flowers[,14:15], sep=":"),  
-                                    loc6 = paste(Flowers[,16:17], sep=":"),  
-                                    loc7 = paste(Flowers[,18:19], sep=":"))
+Flr <- data.frame(Flr[,1:5],loc1 = paste(Flr[,6],  Flr[,7], sep=":"), 
+                            loc2 = paste(Flr[,8],  Flr[,9], sep=":"), 
+                            loc3 = paste(Flr[,10], Flr[,11], sep=":"), 
+                            loc4 = paste(Flr[,12], Flr[,13], sep=":"), 
+                            loc5 = paste(Flr[,14], Flr[,15], sep=":"),  
+                            loc6 = paste(Flr[,16], Flr[,17], sep=":"),  
+                            loc7 = paste(Flr[,18], Flr[,19], sep=":"))
 
 # 4. Create genind object with "adegenet" function df2genind() 
 # using NA.char = "NA"
-Flowers.genind <- df2genind(X=Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names= Flowers$ID, loc.names=names(Flowers[,c(6:12)]), pop=Flowers$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL, ind.names= Flr$ID, loc.names=names(Flr[,c(6:12)]), pop=Flr$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+# 5. Check genind object
+Flr.genind
+summary(Flr.genind)
 ```
 
 # Count the number of individuals in each pop
 ```{r}
-table(Flowers$Population)
-```
-
-
-```{r}
-Flowers <- data.frame(Flowers[,1:5],loc1 = paste(Flowers$loc1_a, Flowers$loc1_b, sep=":"), loc2 = paste(Flowers$loc2_a, Flowers$loc2_b, sep=":"), loc3 = paste(Flowers$loc3_a, Flowers$loc3_b, sep=":"), loc4 = paste(Flowers$loc4_a, Flowers$loc4_b, sep=":"), loc5 = paste(Flowers$loc5_a, Flowers$loc5_b, sep=":"), loc6 = paste(Flowers$loc6_a, Flowers$loc6_b, sep=":"), loc7 = paste(Flowers$loc7_a, Flowers$loc7_b, sep=":"))
-```
-
-Create 'genind' object:
-```{r}
-
-```
-
-Get info on genind object:
-```{r}
-Flowers.genind
-summary(Flowers.genind)
+table(Flr$Population)
 ```
 
 ## With Gstudio this time
@@ -190,29 +178,38 @@ summary(Flowers.genind)
 library(gstudio)
 library(adegenet)
 
-g.Flowers <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
+# 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
+# with "gstudio" function read_population()
+g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",
+                       type = "column",locus.columns = c(6:19))
 
-g.Flowers <- g.Flowers[g.Flowers$OffID==0,] # filter() is not working
+# 2. Select only adults with base R indexing of data frame 
+# rows where OffID==0, all columns
+g.Flr <- g.Flr[g.Flr$OffID==0,]
 
-g.Flowers.genind <- df2genind(X=g.Flowers[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flowers$ID, loc.names=NULL, pop=g.Flowers$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+# 3. Nothing to do here
 
-g.Flowers.genind
+# 4. Create genind object with "adegenet" function df2genind() 
+# using NA.char = ""
+g.Flr.genind <- df2genind(X=g.Flr[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flr$ID, loc.names=NULL, pop=g.Flr$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
 
-summary(g.Flowers.genind)
+# 5. Check genind object
+g.Flr.genind
+summary(g.Flr.genind)
 ```
 ## Check for HWE by site and locus and calculate Hexp for each site
 
 Test for HWE with pegas by site
 ```{r}
 # Chi-squared test: p-value
-HWE.test <- data.frame(sapply(seppop(g.Flowers.genind), 
+HWE.test <- data.frame(sapply(seppop(g.Flr.genind), 
                               function(ls) pegas::hw.test(ls, B=0)[,3]))
 HWE.test.chisq <- t(data.matrix(HWE.test))
 {cat("Chi-squared test (p-values):", "\n")
 round(HWE.test.chisq,3)}
 
 # Monte Carlo: p-value
-HWE.test <- data.frame(sapply(seppop(g.Flowers.genind), 
+HWE.test <- data.frame(sapply(seppop(g.Flr.genind), 
                               function(ls) pegas::hw.test(ls, B=1000)[,4]))
 HWE.test.MC <- t(data.matrix(HWE.test))
 {cat("MC permuation test (p-values):", "\n")
@@ -244,8 +241,8 @@ Prop.pops.out.of.HWE
 # Hexp for each site
 
 ```{r}
-Hobs <- t(sapply(seppop(g.Flowers.genind), function(ls) summary(ls)$Hobs))
-Hexp <- t(sapply(seppop(g.Flowers.genind), function(ls) summary(ls)$Hexp))
+Hobs <- t(sapply(seppop(g.Flr.genind), function(ls) summary(ls)$Hobs))
+Hexp <- t(sapply(seppop(g.Flr.genind), function(ls) summary(ls)$Hexp))
 {cat("Expected heterozygosity (Hexp):", "\n")
 round(Hexp, 2)}
 ```
@@ -259,7 +256,7 @@ round(Hexp, 2)}
 
 Data frame of summary statistics
 ```{r}
-Sum <- summary(g.Flowers.genind)
+Sum <- summary(g.Flr.genind)
 H.pop <- data.frame(Pop = names(Hobs.pop),
                     n = Sum[2]$n.by.pop,
                               Hobs = Hobs.pop,
