@@ -12,8 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 # Section 4.3 Worked Example
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_1.html
 
-Make sure we have the packages, ONLY run once:
+Make sure we have the packages, ONLY run once, and set to eval=FALSE.
 
+```{r, eval = FALSE}
 if(!require("adegenet")) install.packages("adegenet")
 if(!requireNamespace("popgraph", quietly = TRUE))
 {
@@ -24,9 +25,10 @@ if(!requireNamespace("popgraph", quietly = TRUE))
 if(!requireNamespace("gstudio", quietly = TRUE)) remotes::install_github("dyerlab/gstudio")
 
 install.packages("here")
+```
 
-Load libraries (run every time)
-```{r, include = FALSE}
+Load libraries (run every time) and hide text output when knit
+```{r, results = FALSE, warning=FALSE, message=FALSE}
 library(adegenet)
 library(gstudio)
 library(LandGenCourse)
