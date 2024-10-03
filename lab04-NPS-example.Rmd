@@ -100,11 +100,14 @@ plot(Pulsatilla)
 ## h. Create bubble plot
 Adapt code from section 4.d to create a bubble plot of the number of individuals per population. Note: you may drop the argument key.entries as it has a default.
 ```{r}
+library(tmap)
 tmap_mode("view")
 tm_shape(Pulsatilla) + tm_bubbles(col="n") 
 ```
 
 ## i. Save data as R object
 Save the object Pulsatilla.longlat as an R object using the following code:
-saveRDS(Pulsatilla.longlat, file = here::here("output/Pulsatilla.longlat.rds")).
+```{r}
+saveRDS(Pulsatilla, file = "./output/Pulsatilla.longlat.rds")
+```
 We will need it for a later R exercise.
