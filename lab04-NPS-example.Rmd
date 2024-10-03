@@ -1,0 +1,24 @@
+---
+title: "Lab 4"
+author: "Norah Saarman"
+date: "2024-10-03"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load libraries
+```{r, results = FALSE, warning=FALSE, message=FALSE}
+require(adegenet)
+require(LandGenCourse)
+require(pegas)       
+require(PopGenReport)
+require(dplyr)
+require(poppr) 
+require(here)
+```
+# Section 5.4 Exercise
+https://bookdown.org/hhwagner1/LandGenCourse_book/r-exercise-week-2.html
+
