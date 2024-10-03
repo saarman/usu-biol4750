@@ -137,6 +137,14 @@ No longer correlated with sample size.
 
 Task: Drop offspring (seeds, OffID==1) from dataset pulsatilla_genotypes.csv, check for HWE by site and locus and calculate Hexp for each site.
 
+Practice indexing:
+```{r}
+vec <- 1:10
+vec == 3 | vec == 6
+vec[vec == 3 | vec == 6]
+```
+
+
 ## Drop offspring
 Using adegenet and base R
 ```{r}
@@ -158,7 +166,6 @@ Flr <- data.frame(Flr[,1:5],loc1 = paste(Flr[,6],  Flr[,7], sep=":"),
                             loc5 = paste(Flr[,14], Flr[,15], sep=":"),  
                             loc6 = paste(Flr[,16], Flr[,17], sep=":"),  
                             loc7 = paste(Flr[,18], Flr[,19], sep=":"))
-
 # 4. Create genind object with "adegenet" function df2genind() 
 # using NA.char = "NA"
 Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL, ind.names= Flr$ID, loc.names=names(Flr[,c(6:12)]), pop=Flr$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)

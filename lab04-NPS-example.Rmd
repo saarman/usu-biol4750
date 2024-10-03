@@ -2,7 +2,7 @@
 title: "Lab 4: Spatial Data"
 author: "Norah Saarman"
 date: "2024-10-03"
-output: pdf_document
+output: md_document
 ---
 
 ```{r setup, include=FALSE}
@@ -23,10 +23,16 @@ require(sf)
 
 ## b. Import data with gstudio
 
-```{r}
-library(gstudio)
-library(adegenet)
+First downloading the data
+```{r,eval=FALSE}
+if(!dir.exists(paste0(here(),"/downloads"))) dir.create(paste0(here(),"/downloads"))
+file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
+          paste0(here(), "/downloads/ralu.loci.csv"), overwrite=FALSE)
+file.copy(system.file("extdata", "pulsatilla_genotypes.csv", package = "LandGenCourse"),
+          paste0(here(), "/downloads/pulsatilla_genotypes.csv"), overwrite=FALSE)
+```
 
+```{r}
 g.Flowers <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
 
 g.Flowers
