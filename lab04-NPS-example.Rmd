@@ -31,32 +31,55 @@ file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
 file.copy(system.file("extdata", "pulsatilla_genotypes.csv", package = "LandGenCourse"),
           paste0(here(), "/downloads/pulsatilla_genotypes.csv"), overwrite=FALSE)
 ```
-
+Now loading the data with gstudio
 ```{r}
-g.Flowers <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
+g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
 
-g.Flowers
+g.Flr
 ```
 
 ## c. Summarize by site
 
+I would probably just use the function table(), but we can see where this takes us. 
+```{r}
+table(g.Flr$Population) 
+```
+
 Recommend using groups_by from library dplyr, with nested functions n and summarize, and to Write the result into a new object Pulsatilla
 
-summarize(nIndiv = n(g.Flowers ))
+summarize(nIndiv = n(g.Flr ))
 
+Example from Worked example:
 pland_sum_b <- percentage_forest_500_df %>% 
   dplyr::group_by(plot_id) %>% 
   dplyr::summarize(sum_pland = sum(value))
 pland_sum_b
 
-I would probably just use the function table(), but we can see where this takes us. 
-
+```{r}
+puls_df <- g.Flr %>%                 # create a df and piping
+  dplyr::group_by(Population) %>%    # grouping by population and piping
+  dplyr::summarize(nIndiv = n())     # summarize with n() and add name of column "nIndiv"
+puls_df
+```
 ## d. Add mean X and Y coordinates to object Pulsatilla
 
 summarize(nIndiv = n(), myMean = n(myVar))
+```{r}
+puls_df <- g.Flr %>%                 # create a df and piping
+  dplyr::group_by(Population) %>%    # grouping by population and piping
+  dplyr::summarize(nIndiv = n(), meanX = mean(X), meanY = mean(Y))     # summarize with n() and add name of column 
+puls_df
+puls_df$meanX[2] == mean(g.Flr[g.Flr$Population == "A21",4])
+```
 
 ## e. Convert to sf object
 
+```{r}
+Sites <- as.data.frame(puls_df[,2:4])
+rownames(Sites) <- puls_df$Population
+colnames(Sites) <- c("n","X","Y")
+Sites.sf <- st_as_sf(Sites, coords=c("X", "Y"))
+```
 ## f. Specify the known projection 
 
 The correct EPSG number for this dataset is: 31468. You can specify the CRS with: 
