@@ -13,11 +13,10 @@ Load libraries
 ```{r, results = FALSE, warning=FALSE, message=FALSE}
 require(adegenet)
 require(LandGenCourse)
-require(pegas)       
-require(PopGenReport)
+require(gstudio)       
 require(dplyr)
-require(poppr) 
-require(here)
+require(tibble) 
+require(sf)
 ```
 # Section 5.4 Exercise
 https://bookdown.org/hhwagner1/LandGenCourse_book/r-exercise-week-2.html
