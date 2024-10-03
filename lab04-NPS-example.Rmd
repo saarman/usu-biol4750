@@ -1,5 +1,5 @@
 ---
-title: "Lab 4"
+title: "Lab 4: Spatial Data"
 author: "Norah Saarman"
 date: "2024-10-03"
 output: pdf_document
@@ -8,8 +8,10 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# Section 5.4 Exercise
+https://bookdown.org/hhwagner1/LandGenCourse_book/r-exercise-week-2.html
 
-Load libraries
+## a. Load libraries
 ```{r, results = FALSE, warning=FALSE, message=FALSE}
 require(adegenet)
 require(LandGenCourse)
@@ -18,6 +20,50 @@ require(dplyr)
 require(tibble) 
 require(sf)
 ```
-# Section 5.4 Exercise
-https://bookdown.org/hhwagner1/LandGenCourse_book/r-exercise-week-2.html
 
+## b. Import data with gstudio
+
+```{r}
+library(gstudio)
+library(adegenet)
+
+g.Flowers <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
+
+g.Flowers
+```
+
+## c. Summarize by site
+
+Recommend using groups_by from library dplyr, with nested functions n and summarize, and to Write the result into a new object Pulsatilla
+
+summarize(nIndiv = n(g.Flowers ))
+
+pland_sum_b <- percentage_forest_500_df %>% 
+  dplyr::group_by(plot_id) %>% 
+  dplyr::summarize(sum_pland = sum(value))
+pland_sum_b
+
+I would probably just use the function table(), but we can see where this takes us. 
+
+## d. Add mean X and Y coordinates to object Pulsatilla
+
+summarize(nIndiv = n(), myMean = n(myVar))
+
+## e. Convert to sf object
+
+## f. Specify the known projection 
+
+The correct EPSG number for this dataset is: 31468. You can specify the CRS with: 
+st_crs(Pulsatilla) <- 31468
+
+## g. Transform to lat/long projection
+Adapt code from section 2.c to transform the projection to the “longlat” coordinate system, and write it into an object Pulsatilla.longlat.
+
+## h. Create bubble plot
+Adapt code from section 4.d to create a bubble plot of the number of individuals per population. Note: you may drop the argument key.entries as it has a default.
+
+## i. Save data as R object
+
+Save the object Pulsatilla.longlat as an R object using the following code:
+saveRDS(Pulsatilla.longlat, file = here::here("output/Pulsatilla.longlat.rds")).
+We will need it for a later R exercise.
