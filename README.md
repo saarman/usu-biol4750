@@ -29,6 +29,12 @@ A place for students to go to look at records from live coding examples and note
  - **b. Section 6.4 R exercise Week 3** (you will need to write your own code using knowledge from Section 6.3)
  - At the end, **knit it to a pdf or md file**, export from RStudio, and submit to Canvas for credit and feedback. If there are error messages during knitting, check the ‘R Markdown’ tab for the code line number and try to fix it. Ask for help if you need it!
 
+## Lab 4: Spatial Data 10/3/2024 
+ - lab04-NPS-example.Rmd (lab04-NPS-example.md and lab04-NPS-example.pdf are the knitted versions)
+ - Following along from https://bookdown.org/hhwagner1/LandGenCourse_book/Week2.html 
+ - Create an Rmd log entry that provides the code from:
+ - **Section 5.4 R exercise Week 2** (you will need review applicable code from Section 5.3 to write your own code)
+ - At the end, **knit it to a pdf or md file**, export from RStudio, and submit to Canvas for credit and feedback. If there are error messages during knitting, check the ‘R Markdown’ tab for the code line number and try to fix it. Ask for help if you need it!
 
 # Helpful links:  
   
