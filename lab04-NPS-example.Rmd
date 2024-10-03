@@ -78,21 +78,33 @@ puls_df$meanX[2] == mean(g.Flr[g.Flr$Population == "A21",4])
 Sites <- as.data.frame(puls_df[,2:4])
 rownames(Sites) <- puls_df$Population
 colnames(Sites) <- c("n","X","Y")
-Sites.sf <- st_as_sf(Sites, coords=c("X", "Y"))
+Pulsatilla <- st_as_sf(Sites, coords=c("X", "Y"))
 ```
 ## f. Specify the known projection 
 
 The correct EPSG number for this dataset is: 31468. You can specify the CRS with: 
+```{r}
 st_crs(Pulsatilla) <- 31468
+
+Pulsatilla
+```
 
 ## g. Transform to lat/long projection
 Adapt code from section 2.c to transform the projection to the “longlat” coordinate system, and write it into an object Pulsatilla.longlat.
+```{r}
+st_transform(Pulsatilla, crs = 4326)
+Pulsatilla
 
+plot(Pulsatilla)
+```
 ## h. Create bubble plot
 Adapt code from section 4.d to create a bubble plot of the number of individuals per population. Note: you may drop the argument key.entries as it has a default.
+```{r}
+tmap_mode("view")
+tm_shape(Pulsatilla) + tm_bubbles(col="n") 
+```
 
 ## i. Save data as R object
-
 Save the object Pulsatilla.longlat as an R object using the following code:
 saveRDS(Pulsatilla.longlat, file = here::here("output/Pulsatilla.longlat.rds")).
 We will need it for a later R exercise.
