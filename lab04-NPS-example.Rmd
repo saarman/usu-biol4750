@@ -2,7 +2,7 @@
 title: "Lab 4: Spatial Data"
 author: "Norah Saarman"
 date: "2024-10-03"
-output: md_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -35,7 +35,7 @@ Now loading the data with gstudio
 ```{r}
 g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
 
-g.Flr
+#g.Flr
 ```
 
 ## c. Summarize by site
@@ -99,15 +99,133 @@ plot(Pulsatilla)
 ```
 ## h. Create bubble plot
 Adapt code from section 4.d to create a bubble plot of the number of individuals per population. Note: you may drop the argument key.entries as it has a default.
-```{r}
+
+Here it is in live view mode, i don't need this in knitted output:
+```{r, eval=FALSE}
 library(tmap)
 tmap_mode("view")
+tm_shape(Pulsatilla) + tm_bubbles(col="n") 
+```
+Here it is again with plot mode so that I can have something in knitted output
+```{r}
+library(tmap)
+tmap_mode("plot")
 tm_shape(Pulsatilla) + tm_bubbles(col="n") 
 ```
 
 ## i. Save data as R object
 Save the object Pulsatilla.longlat as an R object using the following code:
-```{r}
+```{r,eval=FALSE}
 saveRDS(Pulsatilla, file = "./output/Pulsatilla.longlat.rds")
 ```
 We will need it for a later R exercise.
+
+
+# BONUS material, working with 'sf' and 'terra'
+
+##1. Load libraries, need to install GeNetIt
+```{r}
+library(LandGenCourse)
+library(sf)
+library(GeNetIt)
+library(terra)
+library(tmap)
+library(dplyr)
+library(tibble)
+library(here)
+```
+##2. import/export ESRI shape files
+a. Export ‘sf’ object to shapefile
+```{r}
+data(ralu.site)
+if(!dir.exists(here("output"))) dir.create(here("output"))
+dir.create(here("output/Sites"))
+st_write(ralu.site, here("output/Sites/Sites.shp"), delete_dsn = TRUE)
+```
+b. Import shapefile to ‘sf’ object
+```{r}
+Sites.sf_a <- st_read(here("output/Sites/Sites.shp"))
+Sites.sf_a 
+plot(Sites.sf_a)
+```
+As sp
+```{r}
+data(ralu.site)
+Sites.sp <- sf::as_Spatial(ralu.site)
+Sites.sp
+```
+Convert back to sf
+```{r}
+Sites.sf_b <- sf::st_as_sf(Sites.sp)
+Sites.sf_b
+```
+
+## b. Converting between terra and raster
+```{r}
+RasterMaps <- rast(system.file("extdata/covariates.tif", package="GeNetIt"))
+
+RasterMaps.r <- raster::stack(RasterMaps)
+RasterMaps.r 
+
+plot(RasterMaps.r)
+```
+grab one layer
+```{r}
+gsp.r <- raster::raster(RasterMaps$gsp)
+gsp.r 
+plot(gsp.r)
+```
+Convert to "terra"
+```{r}
+gsp <- terra::rast(gsp.r)
+gsp
+plot(gsp)
+plot(gsp.r)
+
+RasterMaps_b <- terra::rast(RasterMaps.r)
+RasterMaps_b
+```
+
+## 4. Plotting spatial data with tmap
+a. Plotting just the geometry from the data stored in sf object
+```{r}
+data(ralu.site)
+Sites.sf_c <- ralu.site
+plot(st_geometry(Sites.sf_c))
+```
+b. Plot the attributes
+```{r}
+par(mar=c(2,2,2,2))
+plot(Sites.sf_c, pch=16, cex=2)
+```
+```{r}
+
+plot(Sites.sf_c[,c("Basin", "Depth_m")], pch=16)
+
+plot(Sites.sf_c[,c(3,8)], pch=16)
+```
+c. bubble plot with tmap library
+```{r}
+tmap_mode("plot")
+tm_shape(Sites.sf_c) + tm_bubbles(size="Depth_m", col="Basin") +
+  tm_layout(legend.outside=TRUE, legend.outside.position="right") 
+```
+Extend extent of the plot
+```{r}
+Bbox = st_bbox(Sites.sf_c)
+Bbox
+
+#expand this by a factor of 0.1
+delta.x <- Bbox[3] - Bbox[1]
+delta.y <- Bbox[4] - Bbox[2]
+Zoom <- 0.2
+Bbox2 <- Bbox + c(-delta.x, -delta.y, delta.x, delta.y) * Zoom
+Bbox2
+```
+```{r}
+tmap_mode("plot")
+Map1 <- tm_shape(Sites.sf_c, bbox=Bbox2) + 
+  tm_bubbles(size="Depth_m", col="Basin") +
+  tm_layout(legend.outside=TRUE, legend.outside.position="right") 
+Map1
+```
