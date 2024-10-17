@@ -19,6 +19,16 @@ require(gstudio)
 require(dplyr)
 require(tibble) 
 require(sf)
+require(EcoGenetics)
+require(GeNetIt)
+require(popgraph)
+require(RgoogleMaps)
+require(geosphere)
+require(proto)
+require(sampling)
+require(seqinr)
+require(spacetime)
+require(spdep)
 ```
 
 ## b. Import data with gstudio
