@@ -34,84 +34,7 @@ require(spdep)
 require(here)
 ```
 
-## b. Import data with gstudio
-
-First downloading the data
-```{r,eval=FALSE}
-if(!dir.exists(paste0(here(),"/downloads"))) dir.create(paste0(here(),"/downloads"))
-file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
-          paste0(here(), "/downloads/ralu.loci.csv"), overwrite=FALSE)
-file.copy(system.file("extdata", "pulsatilla_genotypes.csv", package = "LandGenCourse"),
-          paste0(here(), "/downloads/pulsatilla_genotypes.csv"), overwrite=FALSE)
-```
-Now loading the data with gstudio
-```{r}
-g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
-
-#g.Flr
-```
-
-## c. Summarize by site
-
-I would probably just use the function table(), but we can see where this takes us. 
-```{r}
-table(g.Flr$Population) 
-```
-
-Recommend using groups_by from library dplyr, with nested functions n and summarize, and to Write the result into a new object Pulsatilla
-
-summarize(nIndiv = n(g.Flr ))
-
-Example from Worked example:
-pland_sum_b <- percentage_forest_500_df %>% 
-  dplyr::group_by(plot_id) %>% 
-  dplyr::summarize(sum_pland = sum(value))
-pland_sum_b
-
-```{r}
-puls_df <- g.Flr %>%                 # create a df and piping
-  dplyr::group_by(Population) %>%    # grouping by population and piping
-  dplyr::summarize(nIndiv = n())     # summarize with n() and add name of column "nIndiv"
-puls_df
-```
-## d. Add mean X and Y coordinates to object Pulsatilla
-
-summarize(nIndiv = n(), myMean = n(myVar))
-```{r}
-puls_df <- g.Flr %>%                 # create a df and piping
-  dplyr::group_by(Population) %>%    # grouping by population and piping
-  dplyr::summarize(nIndiv = n(), meanX = mean(X), meanY = mean(Y))     # summarize with n() and add name of column 
-puls_df
-puls_df$meanX[2] == mean(g.Flr[g.Flr$Population == "A21",4])
-```
-
-## e. Convert to sf object
-
-```{r}
-Sites <- as.data.frame(puls_df[,2:4])
-rownames(Sites) <- puls_df$Population
-colnames(Sites) <- c("n","X","Y")
-Pulsatilla <- st_as_sf(Sites, coords=c("X", "Y"))
-```
-## f. Specify the known projection 
-
-The correct EPSG number for this dataset is: 31468. You can specify the CRS with: 
-```{r}
-st_crs(Pulsatilla) <- 31468
-
-Pulsatilla
-```
-
-## g. Transform to lat/long projection
-Adapt code from section 2.c to transform the projection to the “longlat” coordinate system, and write it into an object Pulsatilla.longlat.
-```{r}
-st_transform(Pulsatilla, crs = 4326)
-Pulsatilla
-
-plot(Pulsatilla)
-```
-
-## With Gstudio this time
+b. Import to adegenet object with gstudio
 ```{r}
 library(gstudio)
 library(adegenet)
@@ -134,4 +57,39 @@ g.Flr.genind <- df2genind(X=g.Flr[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Fl
 # 5. Check genind object
 g.Flr.genind
 summary(g.Flr.genind)
+```
+Without G-Studio, Drop offspring
+Using adegenet and base R
+```{r}
+library(adegenet)
+
+# 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
+# with base R function read.csv()
+Flr <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
+
+# 2. Select only adults with base R indexing of data frame 
+# rows where OffID==0, all columns
+Flr <- Flr[Flr$OffID==0,]
+
+# 3. Combine columns with base R function paste()
+Flr <- data.frame(Flr[,1:5],loc1 = paste(Flr[,6],  Flr[,7], sep=":"), 
+                            loc2 = paste(Flr[,8],  Flr[,9], sep=":"), 
+                            loc3 = paste(Flr[,10], Flr[,11], sep=":"), 
+                            loc4 = paste(Flr[,12], Flr[,13], sep=":"), 
+                            loc5 = paste(Flr[,14], Flr[,15], sep=":"),  
+                            loc6 = paste(Flr[,16], Flr[,17], sep=":"),  
+                            loc7 = paste(Flr[,18], Flr[,19], sep=":"))
+# 4. Create genind object with "adegenet" function df2genind() 
+# using NA.char = "NA"
+Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL, ind.names= Flr$ID, loc.names=names(Flr[,c(6:12)]), pop=Flr$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+# 5. Check genind object
+Flr.genind
+summary(Flr.genind)
+```
+
+c. PLot locations of individuals from site A25
+From dataframe
+```{r}
+Flr
 ```
