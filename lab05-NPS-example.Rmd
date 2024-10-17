@@ -18,7 +18,6 @@ library(LandGenCourse)
 library(GeNetIt)
 library(hierfstat)
 library(adegenet)
-
 require(gstudio)       
 require(dplyr)
 require(tibble) 
@@ -107,7 +106,26 @@ Pulsatilla
 
 plot(Pulsatilla)
 ```
-# d. skipping
+# d. Add geographic info to genind object
+
+Genind object @other can hold a list such as spatial coordinates
+```{r}
+# Create a list of xy coordinates
+df <- Flr[,c("X","Y")]
+  
+xy.list <- lapply(split(df, seq(nrow(df))), function(row) c(row$X, row$Y))
+
+# Add @other list of xy coordinates
+Flr.genind@other <- xy.list
+class(Flr.genind@other)
+
+data(nancycats)
+class(nancycats@other)
+
+#Check genind object
+Flr.genind
+summary(Flr.genind)
+```
 
 # e. Calculate genetic and geographic euclidean distance (for Site A25)
 Genetic with adegenet::propShared
@@ -127,5 +145,15 @@ class(ind.dist)
 
 Geographic with dist()
 ```{r}
+# Change coordinates from crs=31468 to crs=4326
+#convert to SF object
+Pulsatilla <- st_as_sf(Sites, coords=c("X", "Y"))
 
+# Specify the known projection 
+st_crs(Pulsatilla) <- 
+
+Pulsatilla
+
+# Transform to lat/long projection
+st_transform(Pulsatilla, crs = 4326)
 ```
