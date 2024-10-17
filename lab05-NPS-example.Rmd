@@ -97,3 +97,28 @@ Pulsatilla
 
 plot(Pulsatilla)
 ```
+
+## With Gstudio this time
+```{r}
+library(gstudio)
+library(adegenet)
+
+# 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
+# with "gstudio" function read_population()
+g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",
+                       type = "column",locus.columns = c(6:19))
+
+# 2. Select only adults with base R indexing of data frame 
+# rows where OffID==0, all columns
+g.Flr <- g.Flr[g.Flr$OffID==0,]
+
+# 3. Nothing to do here
+
+# 4. Create genind object with "adegenet" function df2genind() 
+# using NA.char = ""
+g.Flr.genind <- df2genind(X=g.Flr[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flr$ID, loc.names=NULL, pop=g.Flr$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+
+# 5. Check genind object
+g.Flr.genind
+summary(g.Flr.genind)
+```
