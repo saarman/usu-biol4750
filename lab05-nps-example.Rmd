@@ -1,0 +1,99 @@
+---
+title: "Lab 4: Spatial Data"
+author: "Norah Saarman"
+date: "2024-10-03"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Section 5.4 Exercise
+https://bookdown.org/hhwagner1/LandGenCourse_book/r-exercise-week-2.html
+
+## a. Load libraries
+```{r, results = FALSE, warning=FALSE, message=FALSE}
+require(adegenet)
+require(LandGenCourse)
+require(gstudio)       
+require(dplyr)
+require(tibble) 
+require(sf)
+```
+
+## b. Import data with gstudio
+
+First downloading the data
+```{r,eval=FALSE}
+if(!dir.exists(paste0(here(),"/downloads"))) dir.create(paste0(here(),"/downloads"))
+file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
+          paste0(here(), "/downloads/ralu.loci.csv"), overwrite=FALSE)
+file.copy(system.file("extdata", "pulsatilla_genotypes.csv", package = "LandGenCourse"),
+          paste0(here(), "/downloads/pulsatilla_genotypes.csv"), overwrite=FALSE)
+```
+Now loading the data with gstudio
+```{r}
+g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
+
+#g.Flr
+```
+
+## c. Summarize by site
+
+I would probably just use the function table(), but we can see where this takes us. 
+```{r}
+table(g.Flr$Population) 
+```
+
+Recommend using groups_by from library dplyr, with nested functions n and summarize, and to Write the result into a new object Pulsatilla
+
+summarize(nIndiv = n(g.Flr ))
+
+Example from Worked example:
+pland_sum_b <- percentage_forest_500_df %>% 
+  dplyr::group_by(plot_id) %>% 
+  dplyr::summarize(sum_pland = sum(value))
+pland_sum_b
+
+```{r}
+puls_df <- g.Flr %>%                 # create a df and piping
+  dplyr::group_by(Population) %>%    # grouping by population and piping
+  dplyr::summarize(nIndiv = n())     # summarize with n() and add name of column "nIndiv"
+puls_df
+```
+## d. Add mean X and Y coordinates to object Pulsatilla
+
+summarize(nIndiv = n(), myMean = n(myVar))
+```{r}
+puls_df <- g.Flr %>%                 # create a df and piping
+  dplyr::group_by(Population) %>%    # grouping by population and piping
+  dplyr::summarize(nIndiv = n(), meanX = mean(X), meanY = mean(Y))     # summarize with n() and add name of column 
+puls_df
+puls_df$meanX[2] == mean(g.Flr[g.Flr$Population == "A21",4])
+```
+
+## e. Convert to sf object
+
+```{r}
+Sites <- as.data.frame(puls_df[,2:4])
+rownames(Sites) <- puls_df$Population
+colnames(Sites) <- c("n","X","Y")
+Pulsatilla <- st_as_sf(Sites, coords=c("X", "Y"))
+```
+## f. Specify the known projection 
+
+The correct EPSG number for this dataset is: 31468. You can specify the CRS with: 
+```{r}
+st_crs(Pulsatilla) <- 31468
+
+Pulsatilla
+```
+
+## g. Transform to lat/long projection
+Adapt code from section 2.c to transform the projection to the “longlat” coordinate system, and write it into an object Pulsatilla.longlat.
+```{r}
+st_transform(Pulsatilla, crs = 4326)
+Pulsatilla
+
+plot(Pulsatilla)
+```
