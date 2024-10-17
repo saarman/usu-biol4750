@@ -1,7 +1,7 @@
 ---
 title: "Lab 4: Spatial Data"
 author: "Norah Saarman"
-date: "2024-10-03"
+date: "2024-10-17"
 output: pdf_document
 ---
 
