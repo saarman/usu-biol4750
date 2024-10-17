@@ -39,7 +39,7 @@ A place for students to go to look at records from live coding examples and note
 
 ## Lab 5: Spatial Statistics 10/3/2024 
  - lab04-NPS-example.Rmd (lab04-NPS-example.md and lab04-NPS-example.pdf are the knitted versions)
- - Following along from https://bookdown.org/hhwagner1/LandGenCourse_book/Week2.html
+ - Following along from https://bookdown.org/hhwagner1/LandGenCourse_book/Week5.html
  - Create an Rmd log entry that provides the code from:
  - **Section 8.5 R exercise Week 5** (you will need review applicable code from Section 5.3 to write your own code)
  - At the end, **knit it to a pdf or md file**, export from RStudio, and submit to Canvas for credit and feedback. If there are error messages during knitting, check the ‘R Markdown’ tab for the code line number and try to fix it. Ask for help if you need it!
