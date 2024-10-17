@@ -91,5 +91,41 @@ summary(Flr.genind)
 c. PLot locations of individuals from site A25
 From dataframe
 ```{r}
-Flr
+Sites <- Flr[Flr$Population=="A25",c("X","Y")]
+
+#convert to SF object
+Pulsatilla <- st_as_sf(Sites, coords=c("X", "Y"))
+
+# Specify the known projection 
+st_crs(Pulsatilla) <- 31468
+
+Pulsatilla
+
+# Transform to lat/long projection
+st_transform(Pulsatilla, crs = 4326)
+Pulsatilla
+
+plot(Pulsatilla)
+```
+# d. skipping
+
+# e. Calculate genetic and geographic euclidean distance (for Site A25)
+Genetic with adegenet::propShared
+```{r}
+#Check genind object
+Flr.genind
+summary(Flr.genind)
+
+# Subset only site A25
+Flr.A25 <- Flr.genind[Flr.genind@pop == "A25"]
+
+# Calculate genetic distance
+ind.dist <- adegenet::propShared(Flr.A25)
+ind.dist <- as.dist(1-ind.dist)
+class(ind.dist)
+```
+
+Geographic with dist()
+```{r}
+
 ```
