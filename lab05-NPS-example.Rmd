@@ -1,5 +1,5 @@
 ---
-title: "Lab 4: Spatial Data"
+title: "Lab 5: Spatial Statistics"
 author: "Norah Saarman"
 date: "2024-10-17"
 output: pdf_document
@@ -12,15 +12,17 @@ knitr::opts_chunk$set(echo = TRUE)
 https://bookdown.org/hhwagner1/LandGenCourse_book/r-exercise-week-2.html
 
 ## a. Load libraries
-```{r, results = FALSE, warning=FALSE, message=FALSE}
-require(adegenet)
-require(LandGenCourse)
+```{r}
+library(LandGenCourse)
+#library(EcoGenetics)
+library(GeNetIt)
+library(hierfstat)
+library(adegenet)
+
 require(gstudio)       
 require(dplyr)
 require(tibble) 
 require(sf)
-require(EcoGenetics)
-require(GeNetIt)
 require(popgraph)
 require(RgoogleMaps)
 require(geosphere)
@@ -29,6 +31,7 @@ require(sampling)
 require(seqinr)
 require(spacetime)
 require(spdep)
+require(here)
 ```
 
 ## b. Import data with gstudio
