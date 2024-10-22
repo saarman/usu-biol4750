@@ -110,20 +110,24 @@ plot(Pulsatilla)
 
 Genind object @other can hold a list such as spatial coordinates
 ```{r}
-# Create a list of xy coordinates
-df <- Flr[,c("X","Y")]
-  
-xy.list <- lapply(split(df, seq(nrow(df))), function(row) c(row$X, row$Y))
+# Create a data frame of xy coordinates from Flr
+df <- Flr[, c("X", "Y")]
 
-# Add @other list of xy coordinates
-Flr.genind@other <- xy.list
-class(Flr.genind@other)
+# Convert the data frame into a matrix of xy coordinates
+xy_matrix <- as.matrix(df)
 
+# Add the matrix to the @other slot with the name "xy"
+Flr.genind@other <- list(xy = xy_matrix)
+
+# Check the class of the @other slot
+class(Flr.genind@other)  # Should return "list"
+
+# Example comparison with nancycats
 data(nancycats)
-class(nancycats@other)
+class(nancycats@other)  # Should also return "list"
 
-#Check genind object
-Flr.genind
+# Inspect the genind object and its summary
+print(Flr.genind)
 summary(Flr.genind)
 ```
 
