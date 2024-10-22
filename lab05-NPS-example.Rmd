@@ -84,47 +84,60 @@ Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL, ind.names= Flr$ID,
 
 # 5. Check genind object
 Flr.genind
+
+Flr.genind@pop
+
 summary(Flr.genind)
 ```
 
 c. PLot locations of individuals from site A25
 From dataframe
 ```{r}
-Sites <- Flr[Flr$Population=="A25",c("X","Y")]
+# Select data for Population "A25"
+Sites <- Flr[Flr$Population == "A25", c("X", "Y")]
 
-#convert to SF object
-Pulsatilla <- st_as_sf(Sites, coords=c("X", "Y"))
+# Check if the data frame has valid coordinates
+head(Sites)
 
-# Specify the known projection 
-st_crs(Pulsatilla) <- 31468
+# Convert to an 'sf' object
+Pulsatilla <- st_as_sf(Sites, coords = c("X", "Y"), crs = 31468) 
 
-Pulsatilla
+# Confirm the CRS was set correctly
+st_crs(Pulsatilla)
 
-# Transform to lat/long projection
-st_transform(Pulsatilla, crs = 4326)
-Pulsatilla
+# Transform to WGS84 (lat/long, EPSG:4326)
+Pulsatilla_latlon <- st_transform(Pulsatilla, crs = 4326)
 
-plot(Pulsatilla)
+# Extract coordinates from the sf object as a matrix
+coords_wgs84 <- st_coordinates(Pulsatilla_latlon)
+
+# Print the extracted WGS84 coordinates to verify
+print(coords_wgs84)
+
+# Calculate the Euclidean distance using dist()
+euclidean_distances <- dist(coords_wgs84, method = "euclidean")
+
+# Print the Euclidean distance matrix
+print(euclidean_distances)
+
+# Convert to a full matrix if needed
+dist_matrix <- as.matrix(euclidean_distances)
+print(dist_matrix)
+
 ```
 # d. Add geographic info to genind object
 
 Genind object @other can hold a list such as spatial coordinates
 ```{r}
-# Create a data frame of xy coordinates from Flr
-df <- Flr[, c("X", "Y")]
 
-# Convert the data frame into a matrix of xy coordinates
-xy_matrix <- as.matrix(df)
+# Convert data frame of xy coordinates from Flr into a matrix of xy coordinates
+xy_matrix <- as.matrix(Flr[, c("X", "Y")])
 
 # Add the matrix to the @other slot with the name "xy"
 Flr.genind@other <- list(xy = xy_matrix)
 
 # Check the class of the @other slot
 class(Flr.genind@other)  # Should return "list"
-
-# Example comparison with nancycats
-data(nancycats)
-class(nancycats@other)  # Should also return "list"
 
 # Inspect the genind object and its summary
 print(Flr.genind)
@@ -149,15 +162,8 @@ class(ind.dist)
 
 Geographic with dist()
 ```{r}
-# Change coordinates from crs=31468 to crs=4326
-#convert to SF object
-Pulsatilla <- st_as_sf(Sites, coords=c("X", "Y"))
+#We have already changed coordinates and subset A25
+# use dist()
+dist(Pulsatilla)
 
-# Specify the known projection 
-st_crs(Pulsatilla) <- 
-
-Pulsatilla
-
-# Transform to lat/long projection
-st_transform(Pulsatilla, crs = 4326)
 ```
