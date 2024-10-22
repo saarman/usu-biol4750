@@ -107,23 +107,6 @@ st_crs(Pulsatilla)
 
 # Transform to WGS84 (lat/long, EPSG:4326)
 Pulsatilla_latlon <- st_transform(Pulsatilla, crs = 4326)
-
-# Extract coordinates from the sf object as a matrix
-coords_wgs84 <- st_coordinates(Pulsatilla_latlon)
-
-# Print the extracted WGS84 coordinates to verify
-print(coords_wgs84)
-
-# Calculate the Euclidean distance using dist()
-euclidean_distances <- dist(coords_wgs84, method = "euclidean")
-
-# Print the Euclidean distance matrix
-print(euclidean_distances)
-
-# Convert to a full matrix if needed
-dist_matrix <- as.matrix(euclidean_distances)
-print(dist_matrix)
-
 ```
 # d. Add geographic info to genind object
 
@@ -162,8 +145,22 @@ class(ind.dist)
 
 Geographic with dist()
 ```{r}
-#We have already changed coordinates and subset A25
-# use dist()
-dist(Pulsatilla)
+# We have already changed coordinates and subset A25
+# Extract coordinates from the sf object as a matrix
+coords_wgs84 <- st_coordinates(Pulsatilla_latlon)
+
+# Print the extracted WGS84 coordinates to verify
+print(coords_wgs84)
+
+# Calculate the Euclidean distance using dist()
+euclidean_distances <- dist(coords_wgs84, method = "euclidean")
+
+# Print the Euclidean distance matrix
+print(euclidean_distances)
+
+# Convert to a full matrix if needed
+dist_matrix <- as.matrix(euclidean_distances)
+print(dist_matrix)
+
 
 ```
