@@ -33,35 +33,25 @@ require(spdep)
 require(here)
 ```
 
-## b. Import to adegenet object Using adegenet and base R, Without G-Studio, Drop offspring:
+## b. Import to adegenet object G-Studio, Drop offspring:
 ```{r}
-library(adegenet)
-
 # 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
-# with base R function read.csv()
-Flr <- read.csv("./downloads/pulsatilla_genotypes.csv", header=TRUE)
+# with "gstudio" function read_population()
+g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",
+                       type = "column",locus.columns = c(6:19))
 
 # 2. Select only adults with base R indexing of data frame 
 # rows where OffID==0, all columns
-Flr <- Flr[Flr$OffID==0,]
+g.Flr <- g.Flr[g.Flr$OffID==0,]
 
-# 3. Combine columns with base R function paste()
-Flr <- data.frame(Flr[,1:5],loc1 = paste(Flr[,6],  Flr[,7], sep=":"), 
-                            loc2 = paste(Flr[,8],  Flr[,9], sep=":"), 
-                            loc3 = paste(Flr[,10], Flr[,11], sep=":"), 
-                            loc4 = paste(Flr[,12], Flr[,13], sep=":"), 
-                            loc5 = paste(Flr[,14], Flr[,15], sep=":"),  
-                            loc6 = paste(Flr[,16], Flr[,17], sep=":"),  
-                            loc7 = paste(Flr[,18], Flr[,19], sep=":"))
+# 3. Nothing to do here
+
 # 4. Create genind object with "adegenet" function df2genind() 
-# using NA.char = "NA"
-Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL, ind.names= Flr$ID, loc.names=names(Flr[,c(6:12)]), pop=Flr$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+# using NA.char = ""
+Flr.genind <- df2genind(X=g.Flr[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flr$ID, loc.names=NULL, pop=g.Flr$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
 
 # 5. Check genind object
 Flr.genind
-
-Flr.genind@pop
-
 summary(Flr.genind)
 ```
 
@@ -126,7 +116,9 @@ For now I'll proceed with the full genind object.
 Dgen_matrix <- adegenet::propShared(Flr.A25)
 
 # Convert to a distance vector (1 - proportion shared)
-Dgen <- as.vector(1 - Dgen_matrix)
+Dgen <- as.vector(as.dist(1 - Dgen_matrix))
+
+length(Dgen)
 ```
 
 ### Geographic with dist()
@@ -150,6 +142,8 @@ colnames(df_xy) <- c("X", "Y")
 
 # Calculate Euclidean geographic distances
 Dgeo <- as.vector(dist(df_xy))
+
+length(Dgeo)
 ```
 
 Adapt section 4a to Visualize
@@ -163,9 +157,6 @@ par(mar = c(4, 4, 0, 0))  # Adjust plot margins
 
 # Generate density for better visualization
 dens <- kde2d(Dgeo, Dgen, n = 300)
-
-length(Dgeo)
-length(Dgen)
 
 # CrDgeo# Create a color palette
 myPal <- colorRampPalette(c("white", "blue", "gold", "orange", "red"))
