@@ -33,32 +33,7 @@ require(spdep)
 require(here)
 ```
 
-b. Import to adegenet object with gstudio
-```{r}
-library(gstudio)
-library(adegenet)
-
-# 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
-# with "gstudio" function read_population()
-g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",
-                       type = "column",locus.columns = c(6:19))
-
-# 2. Select only adults with base R indexing of data frame 
-# rows where OffID==0, all columns
-g.Flr <- g.Flr[g.Flr$OffID==0,]
-
-# 3. Nothing to do here
-
-# 4. Create genind object with "adegenet" function df2genind() 
-# using NA.char = ""
-g.Flr.genind <- df2genind(X=g.Flr[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flr$ID, loc.names=NULL, pop=g.Flr$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
-
-# 5. Check genind object
-g.Flr.genind
-summary(g.Flr.genind)
-```
-Without G-Studio, Drop offspring
-Using adegenet and base R
+## b. Import to adegenet object Using adegenet and base R, Without G-Studio, Drop offspring:
 ```{r}
 library(adegenet)
 
@@ -90,8 +65,7 @@ Flr.genind@pop
 summary(Flr.genind)
 ```
 
-c. PLot locations of individuals from site A25
-From dataframe
+## c. Plot locations of individuals from site A25 From data frame
 ```{r}
 # Select data for Population "A25"
 Sites <- Flr[Flr$Population == "A25", c("X", "Y")]
@@ -100,67 +74,108 @@ Sites <- Flr[Flr$Population == "A25", c("X", "Y")]
 head(Sites)
 
 # Convert to an 'sf' object
-Pulsatilla <- st_as_sf(Sites, coords = c("X", "Y"), crs = 31468) 
+Sites_sf <- st_as_sf(Sites, coords = c("X", "Y"), crs = 31468) 
 
 # Confirm the CRS was set correctly
-st_crs(Pulsatilla)
+st_crs(Sites_sf)
 
 # Transform to WGS84 (lat/long, EPSG:4326)
-Pulsatilla_latlon <- st_transform(Pulsatilla, crs = 4326)
+Sites_latlon <- st_transform(Sites_sf, crs = 4326)
 ```
 # d. Add geographic info to genind object
 
 Genind object @other can hold a list such as spatial coordinates
 ```{r}
+# Select xy coordinates from Flr
+Sites <- Flr[, c("X", "Y")]
 
-# Convert data frame of xy coordinates from Flr into a matrix of xy coordinates
-xy_matrix <- as.matrix(Flr[, c("X", "Y")])
+# Convert to an 'sf' object with the correct original CRS (replace 31468 if needed)
+Sites_sf <- st_as_sf(Sites, coords = c("X", "Y"), crs = 31468)
+
+# Transform to WGS84 (lat/lon, EPSG:4326)
+Sites_latlon <- st_transform(Sites_sf, crs = 4326)
+
+# Extract coordinates from the transformed sf object
+latlon_matrix <- st_coordinates(Sites_latlon)
+
+# Convert to a matrix with column names "longitude" and "latitude"
+colnames(latlon_matrix) <- c("longitude", "latitude")
 
 # Add the matrix to the @other slot with the name "xy"
-Flr.genind@other <- list(xy = xy_matrix)
+Flr.genind@other <- list(xy = latlon_matrix)
 
 # Check the class of the @other slot
-class(Flr.genind@other)  # Should return "list"
+print(class(Flr.genind@other))  # Should return "list"
 
 # Inspect the genind object and its summary
 print(Flr.genind)
-summary(Flr.genind)
 ```
 
-# e. Calculate genetic and geographic euclidean distance (for Site A25)
-Genetic with adegenet::propShared
+## e. Calculate genetic and geographic euclidean distance (for Site A25)
+I can't tell if we are meant to proceed with just population A25? If so, I would first subset like this:
 ```{r}
-#Check genind object
-Flr.genind
-summary(Flr.genind)
-
 # Subset only site A25
 Flr.A25 <- Flr.genind[Flr.genind@pop == "A25"]
+```
+ 
+For now I'll proceed with the full geneind object.
 
-# Calculate genetic distance
-ind.dist <- adegenet::propShared(Flr.A25)
-ind.dist <- as.dist(1-ind.dist)
-class(ind.dist)
+### Genetic distance with adegenet::propShared:
+```{r}
+# Calculate genetic distance matrix
+Dgen_matrix <- adegenet::propShared(Flr.genind)
+
+# Convert to a distance vector (1 - proportion shared)
+Dgen <- as.vector(1 - Dgen_matrix[lower.tri(Dgen_matrix)])
 ```
 
-Geographic with dist()
+### Geographic with dist()
 ```{r}
-# We have already changed coordinates and subset A25
-# Extract coordinates from the sf object as a matrix
-coords_wgs84 <- st_coordinates(Pulsatilla_latlon)
+# Extract the 'xy' matrix from the @other slot
+xy_matrix <- Flr.genind@other$xy
 
-# Print the extracted WGS84 coordinates to verify
-print(coords_wgs84)
+# Convert the matrix back into a data frame
+df_xy <- as.data.frame(xy_matrix)
+colnames(df_xy) <- c("X", "Y") 
 
 # Calculate the Euclidean distance using dist()
-euclidean_distances <- dist(coords_wgs84, method = "euclidean")
+euclidean_distances <- dist(df_xy, method = "euclidean")
 
-# Print the Euclidean distance matrix
-print(euclidean_distances)
+# Extract the 'xy' matrix from the @other slot
+xy_matrix <- Flr.genind@other$xy
 
-# Convert to a full matrix if needed
-dist_matrix <- as.matrix(euclidean_distances)
-print(dist_matrix)
+# Convert the matrix back into a data frame
+df_xy <- as.data.frame(xy_matrix)
+colnames(df_xy) <- c("X", "Y")  # Ensure column names are correct
 
+# Calculate Euclidean geographic distances
+Dgeo <- as.vector(lower.tri(dist(df_xy, method = "euclidean")))
+```
+Adapt section 4a to Visualize
+```{r}
+# Load necessary packages
+library(MASS)  # For kde2d()
+library(scales)  # For transparent colors using alpha
 
+# Step 5: Check visual linearity
+par(mar = c(4, 4, 0, 0))  # Adjust plot margins
+
+# Generate density for better visualization
+dens <- kde2d(Dgeo, Dgen, n = 300)
+
+# Create a color palette
+myPal <- colorRampPalette(c("white", "blue", "gold", "orange", "red"))
+
+# Plot geographic vs genetic distance
+plot(Dgeo, Dgen, pch = 20, cex = 0.5,  
+     xlab = "Geographic Distance", ylab = "Genetic Distance")
+
+# Add density image with transparency
+image(dens, col = alpha(myPal(300), 0.7), add = TRUE)
+
+# Add linear regression line
+abline(lm(Dgen ~ Dgeo), col = "black")
+
+# Add loess smoothing line in red
+lines(loess.smooth(Dgeo, Dgen), col = "red")
 ```
