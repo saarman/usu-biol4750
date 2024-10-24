@@ -37,18 +37,18 @@ require(here)
 ```{r}
 # 1. CSV file "./downloads/pulsatilla_genotypes.csv" --> data frame 
 # with "gstudio" function read_population()
-g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",
+Flr <- read_population("./downloads/pulsatilla_genotypes.csv",
                        type = "column",locus.columns = c(6:19))
 
 # 2. Select only adults with base R indexing of data frame 
 # rows where OffID==0, all columns
-g.Flr <- g.Flr[g.Flr$OffID==0,]
+Flr <- Flr[Flr$OffID==0,]
 
 # 3. Nothing to do here
 
 # 4. Create genind object with "adegenet" function df2genind() 
 # using NA.char = ""
-Flr.genind <- df2genind(X=g.Flr[,c(6:12)], sep=":", ncode=NULL, ind.names=g.Flr$ID, loc.names=NULL, pop=g.Flr$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL, ind.names=Flr$ID, loc.names=NULL, pop=Flr$Population, NA.char="", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
 
 # 5. Check genind object
 Flr.genind
@@ -65,14 +65,14 @@ head(Sites)
 
 # Convert to an 'sf' object
 Sites_sf <- st_as_sf(Sites, coords = c("X", "Y"), crs = 31468) 
-
-# Confirm the CRS was set correctly
-st_crs(Sites_sf)
-
 # Transform to WGS84 (lat/long, EPSG:4326)
 Sites_latlon <- st_transform(Sites_sf, crs = 4326)
-```
-# d. Add geographic info to genind object
+
+plot(Sites_latlon)
+
+```  
+  
+## d. Add geographic info to genind object
 
 Genind object @other can hold a list such as spatial coordinates
 ```{r}
@@ -93,12 +93,6 @@ colnames(latlon_matrix) <- c("longitude", "latitude")
 
 # Add the matrix to the @other slot with the name "xy"
 Flr.genind@other <- list(xy = latlon_matrix)
-
-# Check the class of the @other slot
-print(class(Flr.genind@other))  # Should return "list"
-
-# Inspect the genind object and its summary
-print(Flr.genind)
 ```
 
 ## e. Calculate genetic and geographic euclidean distance (for Site A25)
@@ -110,18 +104,17 @@ Flr.A25 <- Flr.genind[Flr.genind@pop == "A25"]
  
 For now I'll proceed with the full genind object.
 
-### Genetic distance with adegenet::propShared:
+### Step 1: Genetic distance with adegenet::propShared:
 ```{r}
 # Calculate genetic distance matrix
 Dgen_matrix <- adegenet::propShared(Flr.A25)
 
 # Convert to a distance vector (1 - proportion shared)
-Dgen <- as.vector(as.dist(1 - Dgen_matrix))
-
-length(Dgen)
+Dgen <- as.dist(1 - Dgen_matrix)
+Dgen.vec <- as.vector(Dgen)
 ```
 
-### Geographic with dist()
+### Step 2: Geographic with dist()
 
 ### One option is to use the @other slot for lat long coordinates
 ```{r}
@@ -141,12 +134,12 @@ df_xy <- Flr[Flr$Population == "A25", c("X","Y")]
 colnames(df_xy) <- c("X", "Y") 
 
 # Calculate Euclidean geographic distances
-Dgeo <- as.vector(dist(df_xy))
+Dgeo <- dist(df_xy)
 
-length(Dgeo)
+Dgeo.vec <- as.vector(Dgeo)
 ```
 
-Adapt section 4a to Visualize
+### Adapt section 4a to Visualize
 ```{r}
 # Load necessary packages
 library(MASS)  # For kde2d()
@@ -156,24 +149,125 @@ library(scales)  # For transparent colors using alpha
 par(mar = c(4, 4, 0, 0))  # Adjust plot margins
 
 # Generate density for better visualization
-dens <- kde2d(Dgeo, Dgen, n = 300)
+dens <- kde2d(Dgeo.vec, Dgen.vec, n = 300)
 
 # CrDgeo# Create a color palette
 myPal <- colorRampPalette(c("white", "blue", "gold", "orange", "red"))
 
 # Plot geographic vs genetic distance
-plot(Dgeo, Dgen, pch = 20, cex = 0.5,  
+plot(Dgeo.vec, Dgen.vec, pch = 20, cex = 0.5,  
      xlab = "Geographic Distance", ylab = "Genetic Distance")
 
 # Add density image with transparency
 image(dens, col = alpha(myPal(300), 0.7), add = TRUE)
 
 # Add linear regression line
-abline(lm(Dgen ~ Dgeo), col = "black")
+abline(lm(Dgen.vec ~ Dgeo.vec), col = "black")
 
 # Add loess smoothing line in red
-lines(loess.smooth(Dgeo, Dgen), col = "red")
+lines(loess.smooth(Dgeo.vec, Dgen.vec), col = "red")
 ```
 Do you notice something unusual in the plot? Why are there so few different values of genetic distance?
 
-We have 56 individuals, and 7 loci, 105 alleles, 
+We have 56 individuals, and 7 loci, 105 alleles... Maybe low heterozygosity? No. Maybe closely related or even clonal individuals because of vegetative reproduction?
+
+Do you think there is spatial autocorrelation? If so, up to what distance? Yes, it looks like there is correlation of Dgeo and Dgen up until ~ 15 geographic units.
+
+## f. Mantel test 
+```{r}
+
+IBD <- vegan::mantel(Dgen,Dgeo, method="pearson")
+IBD
+```
+## g. Mantel Correlogram Without EcoGenetics
+
+### Step 3: Define Distance Classes (Binning Geographic Distances)
+To create a Mantel correlogram, we need to divide the geographic distances into bins or classes.
+
+```{r}
+# Step 3: Create geographic distance bins (classes)
+# Define the number of bins (adjust this as necessary)
+num_bins <- 10
+
+# Get the range of geographic distances
+max_dist <- max(Dgeo.vec, na.rm = TRUE)
+
+# Define the breaks for binning distances
+breaks <- seq(0, max_dist, length.out = num_bins + 1)
+
+# Assign each pairwise distance to a bin (using cut)
+Dgeo_bins <- cut(as.vector(Dgeo), breaks = breaks, include.lowest = TRUE)
+```
+
+### Step 4. Perform Mantel Tests for Each Distance Class
+In each bin, we perform a Mantel test to assess the correlation between genetic and geographic distances.
+
+```{r}
+# Step 4: Perform Mantel tests for each distance bin
+library(vegan)
+
+# Initialize a vector to store the Mantel correlation coefficients
+mantel_results <- numeric(num_bins)
+
+# Loop over each bin and perform a Mantel test
+for (i in 1:num_bins) {
+  # Create a mask for the current bin (TRUE for distances in this bin)
+  bin_mask <- as.matrix(Dgeo) >= breaks[i] & as.matrix(Dgeo) < breaks[i + 1]
+
+  # Skip bins with no data
+  if (sum(bin_mask) == 0) next
+
+  # Perform Mantel test for this bin
+  mantel_test <- mantel(as.dist(bin_mask), as.dist(Dgen), 
+                        method = "pearson", permutations = 199)
+
+  # Store the Mantel statistic (correlation)
+  mantel_results[i] <- mantel_test$statistic
+}
+```
+
+### Step 5: Plot the Mantel Correlogram
+We plot the Mantel correlation coefficients across the distance bins to visualize the relationship.
+
+```{r}
+# Step 5: Plot the Mantel correlogram
+plot(1:num_bins, mantel_results, type = "b", pch = 16, col = "blue",
+     xlab = "Distance Class", ylab = "Mantel Correlation",
+     main = "Mantel Correlogram: Genetic vs Geographic Distance")
+
+# Add a horizontal line at 0 for reference
+abline(h = 0, lty = 2, col = "red")
+```
+
+
+**Questions:** What is the range of spatial autocorrelation in P. vulgaris in site A25?
+
+Based on a plot of genetic distance against Euclidean distance?
+
+Based on where the Mantel correlogram reaches 0?
+
+Based on statistical significance tests for the Mantel correlogram (with default settings: one-sided alternative “less”, Holm’s adjustment)?
+
+# Interpretation:
+
+Range of Spatial Autocorrelation from the Mantel Correlogram
+Mantel Correlogram Interpretation:
+The Mantel correlogram shows Mantel correlation coefficients plotted across geographic distance bins. This allows you to assess at which spatial scales genetic similarity (spatial autocorrelation) is strongest.
+
+Range of Spatial Autocorrelation:
+
+The range is the largest geographic distance bin where the Mantel correlation coefficient is significantly greater than 0 (positive autocorrelation).
+When the Mantel coefficient reaches 0 (or dips below it), this marks the end of spatial autocorrelation, meaning that at larger distances, genetic similarity is no longer influenced by geographic proximity.
+
+Using Statistical Significance to Identify the Range
+One-Sided Test (Alternative = "less"):
+The one-sided alternative hypothesis (alternative = "less") tests whether there is positive spatial autocorrelation, i.e., whether genetic distance increases with geographic distance. This is relevant for isolation-by-distance (IBD) models.
+
+Holm’s Adjustment for Multiple Tests:
+Since the Mantel correlogram involves multiple distance classes, Holm’s adjustment ensures that statistical significance is corrected for multiple comparisons, reducing the risk of false positives.
+
+How to Interpret Statistical Significance:
+
+For each distance bin, check if the p-value (adjusted using Holm’s method) is statistically significant (e.g., p < 0.05).
+Significant positive Mantel correlation (with alternative = "less") in early bins indicates that genetic similarity is highest at smaller geographic scales.
+The range of spatial autocorrelation is the largest distance bin where the Mantel test remains significant. Beyond this range, genetic similarity no longer follows a geographic pattern.
