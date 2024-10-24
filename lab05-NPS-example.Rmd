@@ -174,3 +174,6 @@ abline(lm(Dgen ~ Dgeo), col = "black")
 # Add loess smoothing line in red
 lines(loess.smooth(Dgeo, Dgen), col = "red")
 ```
+Do you notice something unusual in the plot? Why are there so few different values of genetic distance?
+
+We have 56 individuals, and 7 loci, 105 alleles, 
