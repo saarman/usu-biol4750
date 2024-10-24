@@ -123,16 +123,16 @@ length(Dgen)
 
 ### Geographic with dist()
 
-### One option is to use the @other slot for lat long
+### One option is to use the @other slot for lat long coordinates
 ```{r}
 # Extract the 'xy' matrix from the @other slot
-xy_matrix <- Flr.genind@other$xy
+xy_matrix <- Flr.A25@other$xy
 
 # Convert the matrix back into a data frame
 df_xy <- as.data.frame(xy_matrix)
 ```
 
-### Other (simpler) option is to pull from the original data frame
+### Other (simpler) option is to pull from the original data frame, this is in the grid coordinate system
 ```{r}
 df_xy <- Flr[Flr$Population == "A25", c("X","Y")]
 ```
