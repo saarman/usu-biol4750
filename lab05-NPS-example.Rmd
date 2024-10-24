@@ -118,39 +118,40 @@ I can't tell if we are meant to proceed with just population A25? If so, I would
 Flr.A25 <- Flr.genind[Flr.genind@pop == "A25"]
 ```
  
-For now I'll proceed with the full geneind object.
+For now I'll proceed with the full genind object.
 
 ### Genetic distance with adegenet::propShared:
 ```{r}
 # Calculate genetic distance matrix
-Dgen_matrix <- adegenet::propShared(Flr.genind)
+Dgen_matrix <- adegenet::propShared(Flr.A25)
 
 # Convert to a distance vector (1 - proportion shared)
-Dgen <- as.vector(1 - Dgen_matrix[lower.tri(Dgen_matrix)])
+Dgen <- as.vector(1 - Dgen_matrix)
 ```
 
 ### Geographic with dist()
+
+### One option is to use the @other slot for lat long
 ```{r}
 # Extract the 'xy' matrix from the @other slot
 xy_matrix <- Flr.genind@other$xy
 
 # Convert the matrix back into a data frame
 df_xy <- as.data.frame(xy_matrix)
+```
+
+### Other (simpler) option is to pull from the original data frame
+```{r}
+df_xy <- Flr[Flr$Population == "A25", c("X","Y")]
+```
+
+```{r}
 colnames(df_xy) <- c("X", "Y") 
 
-# Calculate the Euclidean distance using dist()
-euclidean_distances <- dist(df_xy, method = "euclidean")
-
-# Extract the 'xy' matrix from the @other slot
-xy_matrix <- Flr.genind@other$xy
-
-# Convert the matrix back into a data frame
-df_xy <- as.data.frame(xy_matrix)
-colnames(df_xy) <- c("X", "Y")  # Ensure column names are correct
-
 # Calculate Euclidean geographic distances
-Dgeo <- as.vector(lower.tri(dist(df_xy, method = "euclidean")))
+Dgeo <- as.vector(dist(df_xy))
 ```
+
 Adapt section 4a to Visualize
 ```{r}
 # Load necessary packages
@@ -163,7 +164,10 @@ par(mar = c(4, 4, 0, 0))  # Adjust plot margins
 # Generate density for better visualization
 dens <- kde2d(Dgeo, Dgen, n = 300)
 
-# Create a color palette
+length(Dgeo)
+length(Dgen)
+
+# CrDgeo# Create a color palette
 myPal <- colorRampPalette(c("white", "blue", "gold", "orange", "red"))
 
 # Plot geographic vs genetic distance
