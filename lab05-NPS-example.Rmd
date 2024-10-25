@@ -167,6 +167,19 @@ abline(lm(Dgen.vec ~ Dgeo.vec), col = "black")
 # Add loess smoothing line in red
 lines(loess.smooth(Dgeo.vec, Dgen.vec), col = "red")
 ```
+With log transformation
+```{r}
+Let’s take the natural logarithm of geographic distance:
+
+par(mar=c(4,4,0,0))
+dens <- MASS::kde2d(log(Dgeo.vec), Dgen.vec, n=300)
+plot(log(Dgeo.vec), Dgen.vec, pch=20, cex=0.5,  
+    xlab="Geographic Distance", ylab="Genetic Distance")
+image(dens, col=transp(myPal(300), 0.7), add=TRUE)
+abline(lm(Dgen.vec ~ log(Dgeo.vec)))
+lines(loess.smooth(log(Dgeo.vec), Dgen.vec), col="red")
+```
+
 Do you notice something unusual in the plot? Why are there so few different values of genetic distance?
 
 We have 56 individuals, and 7 loci, 105 alleles... Maybe low heterozygosity? No. Maybe closely related or even clonal individuals because of vegetative reproduction?
