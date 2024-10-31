@@ -175,7 +175,6 @@ Do you think there is spatial autocorrelation? If so, up to what distance? Yes, 
 
 ## f. Mantel test 
 ```{r}
-
 IBD <- vegan::mantel(Dgen,Dgeo, method="pearson")
 IBD
 ```
@@ -208,7 +207,8 @@ library(vegan)
 
 # Initialize a vector to store the Mantel correlation coefficients
 mantel_results <- numeric(num_bins)
-
+mantel_p <- 1:num_bins
+  
 # Loop over each bin and perform a Mantel test
 for (i in 1:num_bins) {
   # Create a mask for the current bin (TRUE for distances in this bin)
@@ -223,6 +223,7 @@ for (i in 1:num_bins) {
 
   # Store the Mantel statistic (correlation)
   mantel_results[i] <- mantel_test$statistic
+  mantel_p[i] <- mantel_test$signif
 }
 ```
 
@@ -230,23 +231,36 @@ for (i in 1:num_bins) {
 We plot the Mantel correlation coefficients across the distance bins to visualize the relationship.
 
 ```{r}
+
+colors =  c("gray","gray", "gray", "blue", "gray", "blue", "blue", "gray", "blue", "gray")
+  
 # Step 5: Plot the Mantel correlogram
-plot(1:num_bins, mantel_results, type = "b", pch = 16, col = "blue",
+plot(1:num_bins, xaxt='n', mantel_results, type = "b", pch = 16, col = colors,
      xlab = "Distance Class", ylab = "Mantel Correlation",
      main = "Mantel Correlogram: Genetic vs Geographic Distance")
 
+
+# Replace x-axis labels with 'custom_labels'
+custom_labels <- round(breaks[2:11],0)
+axis(1, at=1:num_bins, labels=custom_labels)
+
 # Add a horizontal line at 0 for reference
 abline(h = 0, lty = 2, col = "red")
+
+
 ```
 
 
 **Questions:** What is the range of spatial autocorrelation in P. vulgaris in site A25?
 
 Based on a plot of genetic distance against Euclidean distance?
+A: We can't really tell the lower end of the range, but it only shows positive correlation up to about 15 km.
 
 Based on where the Mantel correlogram reaches 0?
+A: The correlogram shows positive r values from ~10-22 km, indicating the range of spatial autocorrelation in P. vulgaris in site A25 is from ~10-22 km in pairwise euclidean distances.
 
 Based on statistical significance tests for the Mantel correlogram (with default settings: one-sided alternative “less”, Holm’s adjustment)?
+A: The significant Mantel's r values for the bins at 12, 18, 20, 26 indicate that there is spatial autocorrelation 10 km to ~26 km, so this is a little larger of a range then we could see in the original genetic vs geographic distance plot.
 
 # Interpretation:
 
