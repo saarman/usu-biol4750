@@ -1,0 +1,36 @@
+---
+title: "Lab 6: Landscape Resistance"
+author: "Norah Saarman"
+date: "2024-10-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Section 13 Exercise
+
+
+## a. Load libraries
+```{r}
+library(LandGenCourse)
+#library(EcoGenetics)
+library(GeNetIt)
+library(hierfstat)
+library(adegenet)
+require(gstudio)       
+require(dplyr)
+require(tibble) 
+require(sf)
+require(popgraph)
+require(RgoogleMaps)
+require(geosphere)
+require(proto)
+require(sampling)
+require(seqinr)
+require(spacetime)
+require(spdep)
+require(here)
+```
+
+## b. Import to adegenet object G-Studio, Drop offspring:
