@@ -7,13 +7,13 @@ https://ondemand.chpc.utah.edu/pun/sys/dashboard/files/fs/uufs/chpc.utah.edu/com
 ...replacing uXXXXXXX with your U of U user ID.  
 
 # Connecting to RStudio server on CHPC:
-https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_server_app/session_contexts/new       
-**R version:** R 4.4.0 Geospatial packages
-**Cluster:** notchpeak     
-**Account:Partition** saarman-np:saarman-shared-np (very important!!! this allows multiple jobs to run simultaneously, if you don't use this partition you will block entry for everyone else!)     
-**Number of cores:** 4 (there are 32 total)  
-**Number of hours:** 100 (336 is the max, definitely put more than 24)  
-**Memory per job:** 128G (1000 GB total is the max across all of the 32 cores + all users, but good to stay well below half of the limit) 
+https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_server_app/session_contexts/new        
+**R version:** R 4.4.0 Geospatial packages 
+**Cluster:** notchpeak      
+**Account:Partition** saarman-np:saarman-shared-np (very important!!! this allows multiple jobs to run simultaneously, if you don't use this partition you will block entry for everyone else!)      
+**Number of cores:** 4 (there are 32 total)   
+**Number of hours:** 100 (336 is the max, definitely put more than 24)   
+**Memory per job:** 128G (1000 GB total is the max across all of the 32 cores + all users, but good to stay well below half of the limit)  
 
 **You can access a running session by going to https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sessions 
 
