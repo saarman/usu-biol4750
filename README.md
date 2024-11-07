@@ -1,6 +1,22 @@
 # usu-biol4750
 A place for students to go to look at records from live coding examples and notes.
 
+# Logging into the CHPC server:  
+One way to get to your CHPC user interface and have access to your home directory and group storage directory:
+https://ondemand.chpc.utah.edu/pun/sys/dashboard/files/fs/uufs/chpc.utah.edu/common/home/u6036559  
+...replacing uXXXXXXX with your U of U user ID.  
+
+# Connecting to RStudio server on CHPC:
+https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_server_app/session_contexts/new       
+**R version:** R 4.4.0 Geospatial packages
+**Cluster:** notchpeak     
+**Account:Partition** saarman-np:saarman-shared-np (very important!!! this allows multiple jobs to run simultaneously, if you don't use this partition you will block entry for everyone else!)     
+**Number of cores:** 4 (there are 32 total)  
+**Number of hours:** 100 (336 is the max, definitely put more than 24)  
+**Memory per job:** 128G (1000 GB total is the max across all of the 32 cores + all users, but good to stay well below half of the limit) 
+
+**You can access a running session by going to https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sessions 
+
 # Example Lab Portfolios  
 - This is Where Norah will save notes from live coding examples in class, and serves as an example of the portfolio entry you will turn in for all/nothing credit in Canvas.
  - "Save As..." to create a copy of this file with your name/initials, and then fill in the gaps to keep track of your coding, thoughts, and learning.
