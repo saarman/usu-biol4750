@@ -8,7 +8,7 @@ https://ondemand.chpc.utah.edu/pun/sys/dashboard/files/fs/uufs/chpc.utah.edu/com
 
 # Connecting to RStudio server on CHPC:
 https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_server_app/session_contexts/new        
-**R version:** R 4.4.0 Geospatial packages 
+**R version:** R 4.4.0 Geospatial packages   
 **Cluster:** notchpeak      
 **Account:Partition** saarman-np:saarman-shared-np (very important!!! this allows multiple jobs to run simultaneously, if you don't use this partition you will block entry for everyone else!)      
 **Number of cores:** 1-4 (there are 32 total)   
