@@ -59,7 +59,7 @@ https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/rstudio_serve
  - Create an Rmd log entry that provides the code from:
  - **Section 8.5 R exercise Week 5** (you will need review applicable code from Section 5.3 to write your own code)
  - At the end, **knit it to a pdf or md file**, export from RStudio, and submit to Canvas for credit and feedback. If there are error messages during knitting, check the ‘R Markdown’ tab for the code line number and try to fix it. Ask for help if you need it!
- - **Optional Lab 5 bonus: Moran's I** = Section 5.3 R worked example Week 2 - Moran's I (this code uses the package 'spdep')
+ - **Optional Lab 5 bonus: Moran's I** = Section 8.3 R worked example last section - Moran's I (this code uses the package 'spdep')
 
 ## Lab 6: Resistance Surfaces 11/11/2024
  - lab06-NPS-example.Rmd (lab06-NPS-example.md and lab06-NPS-example.pdf are the knitted versions)
