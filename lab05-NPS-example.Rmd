@@ -169,7 +169,7 @@ lines(loess.smooth(Dgeo.vec, Dgen.vec), col = "red")
 ```
 With log transformation
 ```{r}
-Let’s take the natural logarithm of geographic distance:
+#Lets take the natural logarithm of #geographic distance:
 
 par(mar=c(4,4,0,0))
 dens <- MASS::kde2d(log(Dgeo.vec), Dgen.vec, n=300)
@@ -298,3 +298,71 @@ How to Interpret Statistical Significance:
 For each distance bin, check if the p-value (adjusted using Holm’s method) is statistically significant (e.g., p < 0.05).
 Significant positive Mantel correlation (with alternative = "less") in early bins indicates that genetic similarity is highest at smaller geographic scales.
 The range of spatial autocorrelation is the largest distance bin where the Mantel test remains significant. Beyond this range, genetic similarity no longer follows a geographic pattern.
+
+# Moran's I : Lab 5 bonus
+
+Calculate and test Moran’s I for population-level genetic diversity data, allelic richness, using the genind object from above
+
+## 1. Load Required Libraries and Prepare Data
+
+```{r}
+library(adegenet)
+library(spdep)
+
+# Ensure the genind object is loaded
+Flr.genind
+
+# Summarize allelic richness
+Richness <- PopGenReport::allel.rich(Flr.genind, min.alleles = NULL)
+
+# Extract the mean allelic richness (Ar) for each population
+allelic_richness <- Richness$mean.richness
+
+
+# Use Flr to combine coordinates and population labels
+coords_df <- data.frame(pop=Flr$Population, x = Flr$X, y = Flr$Y)
+
+# Aggregate (mean lat/long) coordinates by population using aggregate()
+pop_coords <- aggregate(. ~ pop, data = coords_df, FUN = mean)
+
+str(pop_coords)
+
+```
+## 2. Create a Spatial Weights Matrix
+The spatial weights matrix defines relationships between populations based on their coordinates.
+```{r}
+# convert coords into a matrix
+coords_matrix <- as.matrix(pop_coords[, c("x", "y")])
+
+
+# Create a distance-based spatial weights matrix
+nb <- dnearneigh(coords_matrix, d1 = 0, d2 = 10000)  # Adjust d2 (distance threshold) based on study area
+
+# Convert neighbors list to a spatial weights matrix
+listw <- nb2listw(nb, style = "W")  # W = row-standardized weights
+
+```
+## 3. Calculate Moran's I
+```{r}
+# Perform Moran's I test for allelic richness
+moran_result <-
+spdep::moran.test(allelic_richness, listw, alternative="greater")
+# Print Moran's I result
+print(moran_result)
+
+```
+## Optional, plot coordinates:
+```{r}
+library(ggplot2)
+
+# Combine allelic richness with population coordinates
+pop_coords$allelic_richness <- allelic_richness
+
+# Plot
+ggplot(pop_coords, aes(x = x, y = y, color = allelic_richness)) +
+  geom_point(size = 5) +
+  scale_color_viridis_c() +
+  labs(title = "Spatial Distribution of Allelic Richness",
+       x = "Longitude", y = "Latitude", color = "Allelic Richness") +
+  theme_minimal()
+```
