@@ -1,5 +1,5 @@
 ---
-title: "Lab 6: Landscape Resistance"
+title: "Lab 6: Landscape Resistance, shared alleles"
 author: "Norah Saarman"
 date: "2024-10-17"
 output: pdf_document
