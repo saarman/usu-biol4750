@@ -168,7 +168,9 @@ Flr <- data.frame(Flr[,1:5],loc1 = paste(Flr[,6],  Flr[,7], sep=":"),
                             loc7 = paste(Flr[,18], Flr[,19], sep=":"))
 # 4. Create genind object with "adegenet" function df2genind() 
 # using NA.char = "NA"
-Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL, ind.names= Flr$ID, loc.names=names(Flr[,c(6:12)]), pop=Flr$Population, NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
+Flr.genind <- df2genind(X=Flr[,c(6:12)], sep=":", ncode=NULL,
+                        ind.names= Flr$ID, loc.names=names(Flr[,c(6:12)]), pop=Flr$Population,
+                        NA.char="NA", ploidy=2, type="codom", strata=NULL, hierarchy=NULL)
 
 # 5. Check genind object
 Flr.genind
