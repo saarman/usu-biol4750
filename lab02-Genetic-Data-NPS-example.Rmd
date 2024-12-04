@@ -1,7 +1,7 @@
 ---
 title: "Lab 2: Genetic Data"
 author: "Norah Saarman"
-date: "2024-09-12"
+date: "2024-09-10"
 output: pdf_document
 ---
 
