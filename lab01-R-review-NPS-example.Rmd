@@ -1,5 +1,5 @@
 ---
-title: "Lab 1"
+title: "Lab 1: R review"
 author: "Norah Saarman"
 date: "2024-09-05"
 output: md_document
