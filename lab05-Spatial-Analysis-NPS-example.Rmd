@@ -1,5 +1,5 @@
 ---
-title: "Lab 5: Spatial Statistics"
+title: "Lab 5: Spatial Statistics, Moran's I"
 author: "Norah Saarman"
 date: "2024-10-17"
 output: pdf_document
