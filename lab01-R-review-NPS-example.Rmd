@@ -2,7 +2,7 @@
 title: "Lab 1: R review"
 author: "Norah Saarman"
 date: "2024-09-05"
-output: md_document
+output: pdf_document
 ---
 # Goal 1: Start an R Project on RStudio Server on CHPC
 
