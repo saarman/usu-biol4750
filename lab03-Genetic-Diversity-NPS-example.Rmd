@@ -1,5 +1,5 @@
 ---
-title: "Lab 3: Spatial Data"
+title: "Lab 3: Genetic Diversity"
 author: "Norah Saarman"
 date: "2024-09-17"
 output: pdf_document
