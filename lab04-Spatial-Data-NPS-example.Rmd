@@ -1,0 +1,231 @@
+---
+title: "Lab 4: Spatial Data, Tmap, Bubble Plots"
+author: "Norah Saarman"
+date: "2024-10-03"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Section 5.4 Exercise
+https://bookdown.org/hhwagner1/LandGenCourse_book/r-exercise-week-2.html
+
+## a. Load libraries
+```{r, results = FALSE, warning=FALSE, message=FALSE}
+require(adegenet)
+require(LandGenCourse)
+require(gstudio)       
+require(dplyr)
+require(tibble) 
+require(sf)
+```
+
+## b. Import data with gstudio
+
+First downloading the data
+```{r,eval=FALSE}
+if(!dir.exists(paste0(here(),"/downloads"))) dir.create(paste0(here(),"/downloads"))
+file.copy(system.file("extdata", "ralu.loci.csv", package = "LandGenCourse"),
+          paste0(here(), "/downloads/ralu.loci.csv"), overwrite=FALSE)
+file.copy(system.file("extdata", "pulsatilla_genotypes.csv", package = "LandGenCourse"),
+          paste0(here(), "/downloads/pulsatilla_genotypes.csv"), overwrite=FALSE)
+```
+Now loading the data with gstudio
+```{r}
+g.Flr <- read_population("./downloads/pulsatilla_genotypes.csv",type = "column",locus.columns = c(6:19))
+
+#g.Flr
+```
+
+## c. Summarize by site
+
+I would probably just use the function table(), but we can see where this takes us. 
+```{r}
+table(g.Flr$Population) 
+```
+
+Recommend using groups_by from library dplyr, with nested functions n and summarize, and to Write the result into a new object Pulsatilla
+
+summarize(nIndiv = n(g.Flr ))
+
+Example from Worked example:
+pland_sum_b <- percentage_forest_500_df %>% 
+  dplyr::group_by(plot_id) %>% 
+  dplyr::summarize(sum_pland = sum(value))
+pland_sum_b
+
+```{r}
+puls_df <- g.Flr %>%                 # create a df and piping
+  dplyr::group_by(Population) %>%    # grouping by population and piping
+  dplyr::summarize(nIndiv = n())     # summarize with n() and add name of column "nIndiv"
+puls_df
+```
+## d. Add mean X and Y coordinates to object Pulsatilla
+
+summarize(nIndiv = n(), myMean = n(myVar))
+```{r}
+puls_df <- g.Flr %>%                 # create a df and piping
+  dplyr::group_by(Population) %>%    # grouping by population and piping
+  dplyr::summarize(nIndiv = n(), meanX = mean(X), meanY = mean(Y))     # summarize with n() and add name of column 
+puls_df
+puls_df$meanX[2] == mean(g.Flr[g.Flr$Population == "A21",4])
+```
+
+## e. Convert to sf object
+
+```{r}
+Sites <- as.data.frame(puls_df[,2:4])
+rownames(Sites) <- puls_df$Population
+colnames(Sites) <- c("n","X","Y")
+Pulsatilla <- st_as_sf(Sites, coords=c("X", "Y"))
+```
+## f. Specify the known projection 
+
+The correct EPSG number for this dataset is: 31468. You can specify the CRS with: 
+```{r}
+st_crs(Pulsatilla) <- 31468
+
+Pulsatilla
+```
+
+## g. Transform to lat/long projection
+Adapt code from section 2.c to transform the projection to the “longlat” coordinate system, and write it into an object Pulsatilla.longlat.
+```{r}
+st_transform(Pulsatilla, crs = 4326)
+Pulsatilla
+
+plot(Pulsatilla)
+```
+## h. Create bubble plot
+Adapt code from section 4.d to create a bubble plot of the number of individuals per population. Note: you may drop the argument key.entries as it has a default.
+
+Here it is in live view mode, i don't need this in knitted output:
+```{r, eval=FALSE}
+library(tmap)
+tmap_mode("view")
+tm_shape(Pulsatilla) + tm_bubbles(col="n") 
+```
+Here it is again with plot mode so that I can have something in knitted output
+```{r}
+library(tmap)
+tmap_mode("plot")
+tm_shape(Pulsatilla) + tm_bubbles(col="n") 
+```
+
+## i. Save data as R object
+Save the object Pulsatilla.longlat as an R object using the following code:
+```{r,eval=FALSE}
+saveRDS(Pulsatilla, file = "./output/Pulsatilla.longlat.rds")
+```
+We will need it for a later R exercise.
+
+
+# BONUS material, working with 'sf' and 'terra'
+
+##1. Load libraries, need to install GeNetIt
+```{r}
+library(LandGenCourse)
+library(sf)
+library(GeNetIt)
+library(terra)
+library(tmap)
+library(dplyr)
+library(tibble)
+library(here)
+```
+##2. import/export ESRI shape files
+a. Export ‘sf’ object to shapefile
+```{r}
+data(ralu.site)
+if(!dir.exists(here("output"))) dir.create(here("output"))
+dir.create(here("output/Sites"))
+st_write(ralu.site, here("output/Sites/Sites.shp"), delete_dsn = TRUE)
+```
+b. Import shapefile to ‘sf’ object
+```{r}
+Sites.sf_a <- st_read(here("output/Sites/Sites.shp"))
+Sites.sf_a 
+plot(Sites.sf_a)
+```
+As sp
+```{r}
+data(ralu.site)
+Sites.sp <- sf::as_Spatial(ralu.site)
+Sites.sp
+```
+Convert back to sf
+```{r}
+Sites.sf_b <- sf::st_as_sf(Sites.sp)
+Sites.sf_b
+```
+
+## b. Converting between terra and raster
+```{r}
+RasterMaps <- rast(system.file("extdata/covariates.tif", package="GeNetIt"))
+
+RasterMaps.r <- raster::stack(RasterMaps)
+RasterMaps.r 
+
+plot(RasterMaps.r)
+```
+grab one layer
+```{r}
+gsp.r <- raster::raster(RasterMaps$gsp)
+gsp.r 
+plot(gsp.r)
+```
+Convert to "terra"
+```{r}
+gsp <- terra::rast(gsp.r)
+gsp
+plot(gsp)
+plot(gsp.r)
+
+RasterMaps_b <- terra::rast(RasterMaps.r)
+RasterMaps_b
+```
+
+## 4. Plotting spatial data with tmap
+a. Plotting just the geometry from the data stored in sf object
+```{r}
+data(ralu.site)
+Sites.sf_c <- ralu.site
+plot(st_geometry(Sites.sf_c))
+```
+b. Plot the attributes
+```{r}
+par(mar=c(2,2,2,2))
+plot(Sites.sf_c, pch=16, cex=2)
+```
+```{r}
+
+plot(Sites.sf_c[,c("Basin", "Depth_m")], pch=16)
+
+plot(Sites.sf_c[,c(3,8)], pch=16)
+```
+c. bubble plot with tmap library
+```{r}
+tmap_mode("plot")
+tm_shape(Sites.sf_c) + tm_bubbles(size="Depth_m", col="Basin") +
+  tm_layout(legend.outside=TRUE, legend.outside.position="right") 
+```
+Extend extent of the plot
+```{r}
+Bbox = st_bbox(Sites.sf_c)
+Bbox
+
+#expand this by a factor of 0.1
+delta.x <- Bbox[3] - Bbox[1]
+delta.y <- Bbox[4] - Bbox[2]
+Zoom <- 0.2
+Bbox2 <- Bbox + c(-delta.x, -delta.y, delta.x, delta.y) * Zoom
+Bbox2
+```
+```{r}
+tmap_mode("plot")
+Map1 <- tm_shape(Sites.sf_c, bbox=Bbox2) + 
+  tm_bubbles(size="Depth_m", col="Basin") +
+  tm_layout(legend.outside=TRUE, legend.outside.position="right") 
+Map1
+```
