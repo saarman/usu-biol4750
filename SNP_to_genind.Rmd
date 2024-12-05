@@ -1,0 +1,50 @@
+---
+title: "SNP to genind object"
+author: "Norah Saarman"
+date: "2024-12-05"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(adegenet)
+```
+
+## SNP to genind Object
+```{r}
+# Load data
+data <- read.csv("TF_PS_pipits_genotypes.csv", header = TRUE, row.names = 1)
+
+# Check the first few rows
+head(data)
+
+# Convert to genind object
+genind_obj <- df2genind(data[,2:7], ploidy = 2, sep = "", NA.char = "NA")
+
+# Add pop information based on "Island"
+pop(genind_obj) <- factor(data$Island)
+
+# Check the structure of the genind object
+summary(genind_obj)
+
+```
+# Plot locality data
+
+```{r}
+# Subset data from PS with env data
+data_ps <- data[data$UTM == "28N",]
+
+# Subset genind obj from PS
+genind_ps <- df2genind(data_ps[,2:7], ploidy = 2, sep = "", NA.char = "NA")
+
+# Place coordinates in spacial object
+library(sf)
+library(tmap)
+library(terra)
+Sites.sf_ps <- st_as_sf(data_ps, coords=c("Easting", "Northing"))
+st_crs(Sites.sf_ps) <- 32628
+
+# Plot with tmap
+tmap_mode("plot")
+plot(st_geometry(Sites.sf_ps))
+```
