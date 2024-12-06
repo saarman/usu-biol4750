@@ -338,6 +338,12 @@ coords_matrix <- as.matrix(pop_coords[, c("x", "y")])
 # Create a distance-based spatial weights matrix
 nb <- dnearneigh(coords_matrix, d1 = 0, d2 = 10000)  # Adjust d2 (distance threshold) based on study area
 
+# Investigate the neighbors
+nb
+
+# Plot the links
+plot(nb, coords=pop_coords[, c("x", "y")])
+
 # Convert neighbors list to a spatial weights matrix
 listw <- nb2listw(nb, style = "W")  # W = row-standardized weights
 
@@ -365,4 +371,40 @@ ggplot(pop_coords, aes(x = x, y = y, color = allelic_richness)) +
   labs(title = "Spatial Distribution of Allelic Richness",
        x = "Longitude", y = "Latitude", color = "Allelic Richness") +
   theme_minimal()
+```
+## Optional: Run with multiple values of d2 
+
+```{r}
+
+moran_d2 <- NULL
+moran_stat <- NULL
+moran_p <- NULL
+moran_est <- NULL
+
+for (d in c(7500,8000,8500,9000,9500,10000,10500,11000,11500,12000,12500,13000,13500)){
+    # Create a distance-based spatial weights matrix
+    nb <- dnearneigh(coords_matrix, d1 = 0, d2 = d)  # Adjust d2 (distance threshold) based on     study area
+    
+    # Investigate the neighbors
+    nb
+    
+    # Plot the links
+    plot(nb, coords=pop_coords[, c("x", "y")])
+    
+    # Convert neighbors list to a spatial weights     matrix
+    listw <- nb2listw(nb, style = "W")  # W =     row-standardized weights
+    
+    # Perform Moran's I test for allelic richness
+    moran_result <- spdep::moran.test(allelic_richness, 
+        listw,alternative="greater")
+    
+    # Add to vectors to plot later outside of loop
+    moran_d2 <- c(moran_d2, d)
+    moran_stat <- c(moran_stat, moran_result$statistic)
+    moran_p <- c(moran_p,moran_result$p.value)
+    moran_est <- c(moran_est,moran_result$estimate)
+}
+
+plot(moran_d2,moran_p)
+plot(moran_d2,moran_stat)
 ```
