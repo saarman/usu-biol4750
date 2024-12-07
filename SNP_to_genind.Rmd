@@ -29,7 +29,6 @@ summary(genind_obj)
 
 ```
 # Plot locality data
-
 ```{r}
 # Subset data from PS with env data
 data_ps <- data[data$UTM == "28N",]
@@ -47,4 +46,74 @@ st_crs(Sites.sf_ps) <- 32628
 # Plot with tmap
 tmap_mode("plot")
 plot(st_geometry(Sites.sf_ps))
+```
+# Run gradient forest
+```{r}
+# Impute missing snp data
+genind_imputed <- scaleGen(genind_ps, NA.method = "mean")
+snp.imp <- as.data.frame(genind_imputed)
+snp.imp <- snp.imp[, apply(snp.imp, 2, function(x) length(unique(x)) > 1)]  # Remove invariant SNPs
+
+# Full dataset including missing
+snp <- as.data.frame(genind_ps$tab)
+
+# Environmental data and maxLevel
+env.gf <- as.data.frame(data_ps[,12:22])
+
+# Increase maxLevel to allow deeper splits:
+#maxLevel <- log2(0.368*nrow(env.gf)/2)
+maxLevel <- log2(0.5 * nrow(env.gf))  # Adjust scaling factor
+
+# run gradient forest
+library(gradientForest)
+gf <- gradientForest(cbind(env.gf, snp.imp), predictor.vars=colnames(env.gf), response.vars=colnames(snp), ntree=500, maxLevel=maxLevel, trace=T, corr.threshold=0.250) # Reduce corr.threshold
+```
+```{r}
+
+# Subset data from PS with env data
+data_ps <- data[data$UTM == "28N",]
+
+# Subset of the environmental data
+env <- data_ps[,12:22]
+
+#Exclude snps with very little data, and rows with missing data in either env.gf or snp:
+table(data_ps$X5239s1)
+table(data_ps$X7259s1)
+table(data_ps$TLR4_1)
+table(data_ps$TLR4_2)
+table(data_ps$TLR4_3)
+table(data_ps$TLR4_4)
+
+# code the SNPs as 0,1,2 instead of genind$tab
+snp_df <- data_ps[,2:7]
+snp_df[,1] <- match(snp_df[,1],c("AA","AT","TT"))-1
+snp_df[,2] <- match(snp_df[,1],c("AA","AT","TT"))-1
+snp_df[,3] <- match(snp_df[,1],c("AA","AG","GG"))-1
+snp_df[,4] <- match(snp_df[,1],c("AA","AG","GG"))-1
+snp_df[,5] <- match(snp_df[,1],c("CC","CT","TT"))-1
+snp_df[,6] <- match(snp_df[,1],c("AA","AC","CC"))-1
+
+
+# Combine environmental and SNP data
+env_snp <- cbind(env, snp_df)
+
+# Keep only complete cases
+env_snp <- env_snp[complete.cases(env_snp), ]
+
+# Split back into predictors and responses
+env <- env_snp[, colnames(env)]
+snp <- env_snp[, colnames(snp_df)]
+
+maxLevel <- log2(0.368*nrow(env)/2)
+
+## Now that the dataset has no missing values, run gradientForest:
+gf <- gradientForest(
+  cbind(env, snp),
+  predictor.vars = colnames(env),
+  response.vars = colnames(snp),
+  ntree = 500,
+  maxLevel = maxLevel,
+  trace = TRUE,
+  corr.threshold = 0.25
+)
 ```
